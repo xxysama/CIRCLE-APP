@@ -1,22 +1,56 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
+// eslint-disable-next-line no-unused-vars
+import ForeLayout from '@/foreviews/Layout'
 
 Vue.use(VueRouter)
 
 const routes = [
+
+  // --------网页前台路由-----------
   {
     path: '/',
-    name: 'home',
-    component: Home
+    component: ForeLayout,
+    children: [{
+      path: '',
+      component: () => import('@/foreviews/books/index')
+    }]
   },
+
   {
-    path: '/about',
-    name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+    path: '/books',
+    component: ForeLayout,
+    children: [{
+      path: '',
+      component: () => import('@/foreviews/books/index')
+    }]
+  },
+
+  {
+    path: '/movies',
+    component: ForeLayout,
+    children: [{
+      path: '',
+      component: () => import('@/foreviews/movies/index')
+    }]
+  },
+
+  {
+    path: '/circle',
+    component: ForeLayout,
+    children: [{
+      path: '',
+      component: () => import('@/foreviews/circle/index')
+    }]
+  },
+
+  {
+    path: '/dynamic',
+    component: ForeLayout,
+    children: [{
+      path: '',
+      component: () => import('@/foreviews/dynamic/index')
+    }]
   }
 ]
 
@@ -25,5 +59,9 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes
 })
-
+// 解决两次访问相同路由地址报错
+const originalPush = VueRouter.prototype.push
+VueRouter.prototype.push = function push (location) {
+  return originalPush.call(this, location).catch(err => err)
+}
 export default router
