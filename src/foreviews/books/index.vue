@@ -2,11 +2,18 @@
   <el-row :gutter="24">
   <el-container>
   <el-main>
+    <div>
+      <h2>图书资讯</h2>
+    </div>
+    <el-divider ></el-divider>
     <el-carousel class="books-carousel" indicator-position="outside">
       <el-carousel-item class="books-carousel-item" v-for="item in 4" :key="item">
         <h3>{{ item }}</h3>
       </el-carousel-item>
     </el-carousel>
+
+    <h3>热门书籍</h3>
+    <el-divider></el-divider>
     <el-col :span="4" v-for="item in 10" :key="item">
       <el-card :body-style="{ padding: '0px' }" shadow="hover" @click.native="openbook(item)">
         <img src='../../assets/books/baiyexing.jpg' class="img">
@@ -20,6 +27,7 @@
   </el-col>
   </el-main>
   <el-aside width="25%">
+    <h3>热门标签</h3>
     <div>
       <el-tag><a class="tag-link" href="#">标签一</a></el-tag>
       <el-tag type="success"><a class="tag-link" href="#">标签二</a></el-tag>
@@ -29,6 +37,34 @@
     </div>
   </el-aside>
 </el-container>
+  <div class="books-hot-review">
+    <el-divider></el-divider>
+        <div class="books-review-title">
+            <h3 class="books-most-review-title">最受欢迎书评
+              <el-link class="books-view-title-link" :underline="false">更多热门书评
+                <i class="el-icon-d-arrow-right"></i></el-link></h3>
+        </div>
+  <div class="books-review" v-for="i in 4" :key="i">
+    <div class="books-review-hd">
+      <el-link><el-image :src="url" :underline="false"></el-image></el-link>
+    </div>
+    <div class="books-review-bd">
+      <el-link :underline="false" style="font-size:20px">书籍名称</el-link>
+      <div class="books-review-meta">
+        <div class="books-review-user" style="float:left">
+        <el-link :underline="false">测试用户</el-link>
+        评价
+        <el-link :underline="false">测试书籍</el-link></div>
+        <el-rate v-model="valueRate" disabled show-score text-color="#ff9900" score-template="{value}"></el-rate>
+      </div>
+      <div class="books-review-content">
+        创作这部作品的契机，在于一次相谈甚欢的约稿。可等到头脑冷静下来，我心里叫苦不迭。这只怕是我见过最简洁的选题了，没有类型，没有梗概，没有构想，没有时间节点……有的只是“徐霞客”三个字，以及几个关于他...
+        <el-link :underline="false">(全文)</el-link>
+      </div>
+    </div>
+    <el-divider class="books-review-divider"></el-divider>
+   </div>
+  </div>
 </el-row>
 </template>
 
@@ -36,7 +72,8 @@
 export default {
   data () {
     return {
-      url: require('../../assets/books/baiyexing.jpg')
+      url: require('../../assets/books/baiyexing.jpg'),
+      valueRate: 2.7
     }
   },
   components: {
@@ -108,4 +145,36 @@ export default {
   .books-carousel-item:nth-child(2n+1) {
     background-color: #d3dce6;
   }
+  .books-hot-review{
+    margin-left: 6%;
+    margin-right: 25%
+  }
+  .books-review-hd {
+    float: left;
+    width: 100px;
+}
+  .books-review-bd {
+    padding-left: 120px;
+}
+  .books-review-bd .books-review-meta {
+    color: #666;
+    padding: 8px 0;
+}
+  .books-review-bd .books-review-content {
+    line-height: 20px;
+    padding: 5px 0;
+}
+  .books-review-user{
+  float: left;
+  margin-right: 10px
+}
+.books-review-divider{
+  margin: 50px 0;
+}
+.books-most-review-title{
+  margin: 50px 0;
+}
+.books-view-title-link{
+  margin-left: 20px
+}
 </style>

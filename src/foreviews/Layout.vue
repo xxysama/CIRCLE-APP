@@ -4,7 +4,8 @@
   <el-header>
   <el-row :gutter="20">
     <el-col :span="8">
-        <el-image></el-image>
+        <!-- <el-image class="logo-img" :src="logo"></el-image> -->
+        <img src="../assets/logo.png" class="logo-img">
     </el-col>
     <el-col :span="8">
       <el-tabs v-model="activeName" stretch @tab-click="handleClick">
@@ -24,7 +25,9 @@
   </el-header>
 
    <el-main>
-     <router-view/>
+      <transition name="fade-rv" mode="out-in">
+          <router-view></router-view>
+      </transition>
    </el-main>
 
    <el-footer>
@@ -83,6 +86,16 @@
     margin-left: 5%;
     margin-right: 5%
   }
+  .fade-rv-enter-active, .fade-rv-leave-active {
+  transition: opacity .5s;
+}
+  .fade-rv-enter, .fade-rv-leave-to  {
+  opacity: 0;
+}
+  .logo-img {
+    margin-top: -10px;
+    width: 70%;
+  }
 </style>
 
 <script>
@@ -90,7 +103,9 @@ export default {
   data () {
     return {
       activeName: 'books',
-      SearchInput: ''
+      SearchInput: '',
+      logo: require('../assets/logo.png')
+
     }
   },
   methods: {

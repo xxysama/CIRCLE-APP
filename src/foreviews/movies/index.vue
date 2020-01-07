@@ -56,30 +56,30 @@
 </el-container>
   <div class="movies-hot-review">
     <el-divider></el-divider>
-        <div class="review-title">
-            <h3 class="most-view-title">最受欢迎影评
-              <el-link class="view-title-link" :underline="false">更多热门影评
+        <div class="movies-review-title">
+            <h3 class="movies-most-review-title">最受欢迎影评
+              <el-link class="movies-review-title-link" :underline="false">更多热门影评
                 <i class="el-icon-d-arrow-right"></i></el-link></h3>
         </div>
-  <div class="review" v-for="i in 4" :key="i">
-    <div class="review-hd">
+  <div class="movies-review" v-for="i in 4" :key="i">
+    <div class="movies-review-hd">
       <el-link><el-image :src="url" :underline="false"></el-image></el-link>
     </div>
-    <div class="review-bd">
+    <div class="movies-review-bd">
       <el-link :underline="false" style="font-size:20px">电影标题</el-link>
-      <div class="review-meta">
-        <div class="review-user" style="float:left">
+      <div class="movies-review-meta">
+        <div class="movies-review-user" style="float:left">
         <el-link :underline="false">测试用户</el-link>
         评价
         <el-link :underline="false">测试电影</el-link></div>
         <el-rate v-model="valueRate" disabled show-score text-color="#ff9900" score-template="{value}"></el-rate>
       </div>
-      <div class="review-content">
+      <div class="movies-review-content">
         歌好听，舞好看，场景切换流畅，镜头所展示出这些舞蹈也非常有冲击力，突然唱歌也一点都不觉得尴尬，电影院音响效果也好，最后出字幕也没着急亮灯，观众不多，也都没着急走，观影体验很棒！P.T.巴纳姆在当时的社.
         <el-link :underline="false">(全文)</el-link>
       </div>
     </div>
-    <el-divider class="review-divider"></el-divider>
+    <el-divider class="movies-review-divider"></el-divider>
   </div>
   </div>
 </el-row>
@@ -179,32 +179,32 @@ export default {
     margin-left: 6%;
     margin-right: 25%
   }
-  .review-hd {
+  .movies-review-hd {
     float: left;
     width: 100px;
 }
-.review-bd {
+  .movies-review-bd {
     padding-left: 120px;
 }
-.review-bd .review-meta {
+  .movies-review-bd .movies-review-meta {
     color: #666;
     padding: 8px 0;
 }
-.review-bd .review-content {
+  .movies-review-bd .movies-review-content {
     line-height: 20px;
     padding: 5px 0;
 }
-.review-user{
-  float: left;
-  margin-right: 10px
+  .movies-review-user{
+    float: left;
+    margin-right: 10px
 }
-.review-divider{
-  margin: 50px 0;
+  .movies-review-divider{
+    margin: 50px 0;
 }
-.most-view-title{
-  margin: 50px 0;
+  .movies-most-review-title{
+    margin: 50px 0;
 }
-.view-title-link{
-  margin-left: 20px
+  .movies-review-title-link{
+    margin-left: 20px
 }
 </style>
