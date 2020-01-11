@@ -8,7 +8,7 @@
         <img src="../assets/logo.png" class="logo-img">
     </el-col>
     <el-col :span="8">
-      <el-tabs v-model="activeName" stretch @tab-click="handleClick">
+      <el-tabs v-model="activeName" stretch @tab-click="navHandleClick">
         <el-tab-pane label="读书" name="books"></el-tab-pane>
         <el-tab-pane label="电影" name="movies"></el-tab-pane>
         <el-tab-pane label="圈子" name="circle"></el-tab-pane>
@@ -16,15 +16,24 @@
       </el-tabs>
     </el-col>
      <el-col :span="8">
-       <div class="header-left">
-        <el-button type="primary">登录</el-button>
-        <el-button type="danger">加入圈子</el-button>
+       <div class="header-right">
+          <el-dropdown @command="avatarHandleCommand">
+            <span class="el-dropdown-link">
+              <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar>
+            </span>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item command="sign-in">登录</el-dropdown-item>
+              <el-dropdown-item command="register">注册</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
        </div>
      </el-col>
     </el-row>
   </el-header>
 
    <el-main>
+      <login-form :loginVisible.sync="loginVisible"></login-form>
+
       <transition name="fade-rv" mode="out-in">
           <router-view></router-view>
       </transition>
@@ -68,8 +77,8 @@
   .el-tabs__item {
     font-size: 19px ! important;
   }
-  .header-left {
-    margin-left: 50%;
+  .header-right {
+    margin-left: 70%;
   }
   .el-footer {
     color: #333;
@@ -99,20 +108,39 @@
 </style>
 
 <script>
+import LoginForm from '@/components/LoginForm'
+
 export default {
   data () {
     return {
       activeName: 'books',
       SearchInput: '',
-      logo: require('../assets/logo.png')
-
+      logo: require('../assets/logo.png'),
+      loginVisible: false
     }
   },
+
+  components: {
+    LoginForm
+  },
+
   methods: {
-    handleClick (tab, event) {
+    navHandleClick (tab, event) {
       console.log(tab.name)
       this.$router.push({ path: '/' + tab.name })
+    },
+
+    avatarHandleCommand (command) {
+      if (command === 'sign-in') {
+        console.log('111' + this.loginVisible)
+        this.loginVisible = true
+        console.log('111' + this.loginVisible)
+      };
+      if (command === 'register') {
+        this.loginVisible = true
+      }
     }
+
   }
 }
 </script>

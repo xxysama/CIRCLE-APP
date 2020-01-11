@@ -27,13 +27,24 @@
   </el-col>
   </el-main>
   <el-aside width="25%">
+    <div class="book-aside">
     <h3>热门标签</h3>
-    <div>
+    <div class="book-tag-container">
       <el-tag><a class="tag-link" href="#">标签一</a></el-tag>
       <el-tag type="success"><a class="tag-link" href="#">标签二</a></el-tag>
       <el-tag type="info"><a class="tag-link" href="#">标签三</a></el-tag>
       <el-tag type="warning"><a class="tag-link" href="#">标签四</a></el-tag>
       <el-tag type="danger"><a class="tag-link" href="#">标签五</a></el-tag>
+      <el-tag type=""><a class="tag-link" href="#">标签六</a></el-tag>
+      <el-tag type="success"><a class="tag-link" href="#">标签七</a></el-tag>
+      <el-tag type="info"><a class="tag-link" href="#">标签八</a></el-tag>
+    </div>
+    <h3>一周热读</h3>
+    <div v-for="item in 10" :key="item">
+        <el-link :underline='false'>{{item}}</el-link>
+        <el-divider></el-divider>
+    </div>
+
     </div>
   </el-aside>
 </el-container>
@@ -152,29 +163,38 @@ export default {
   .books-review-hd {
     float: left;
     width: 100px;
-}
+  }
   .books-review-bd {
     padding-left: 120px;
-}
+  }
   .books-review-bd .books-review-meta {
     color: #666;
     padding: 8px 0;
-}
+  }
   .books-review-bd .books-review-content {
     line-height: 20px;
     padding: 5px 0;
-}
+  }
   .books-review-user{
   float: left;
   margin-right: 10px
-}
-.books-review-divider{
+  }
+  .books-review-divider{
   margin: 50px 0;
-}
-.books-most-review-title{
+  }
+  .books-most-review-title{
   margin: 50px 0;
-}
-.books-view-title-link{
+  }
+  .books-view-title-link{
   margin-left: 20px
-}
+  }
+  /*aside 侧边 样式*/
+  .book-aside{
+    margin-left: 70px;
+    margin-right: 40px;
+  }
+  .book-tag-container{
+    margin-bottom: 50px;
+  }
+
 </style>
