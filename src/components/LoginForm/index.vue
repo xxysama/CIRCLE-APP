@@ -15,9 +15,14 @@
         <el-button class="submit-button" type="primary" @click="submitForm('loginForm')"><i class="el-icon-right"></i>进入圈子</el-button>
       </el-form-item>
     </el-form>
-    <div slot="footer" class="dialog-footer">
-      <el-button @click="loginClose">取 消</el-button>
-      <el-button type="primary" @click="loginClose">确 定</el-button>
+    <div class="other-interface">
+      <span>第三方登录</span>
+      <el-row>
+        <el-button circle icon="el-icon-search" ></el-button>
+        <el-button type="success" icon="el-icon-chat-dot-round" circle></el-button>
+        <el-button type="danger" circle>G</el-button>
+      </el-row>
+      <el-link>立即注册</el-link>
     </div>
   </el-dialog>
 </div>
@@ -98,7 +103,7 @@ export default {
 
 <style lang="scss" scoped>
     .xy-login-dialog /deep/ .el-dialog {
-      width: 40%;
+      width: 30%;
       border-radius: 20px;
     }
     .xy-login-dialog /deep/ .el-dialog__title{
@@ -121,5 +126,9 @@ export default {
     .xy-login-dialog /deep/ .submit-button{
       width:100%;
       border-radius: 20px
+    }
+    .other-interface{
+      text-align:center;
+      margin-top:40px
     }
 </style>

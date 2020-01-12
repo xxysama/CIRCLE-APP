@@ -1,7 +1,7 @@
 <template>
   <div class="xy-register-dialog">
     <el-dialog title="注册" :visible.sync="visibleTag" @close="registerClose" :close-on-click-modal="false" :show-close="true" center>
-      <el-form :model="registerForm" status-icon :rules="rules" ref="registerForm" label-width="150px" class="demo-ruleForm">
+      <el-form :model="registerForm" status-icon :rules="rules" ref="registerForm" label-width="100px" class="demo-ruleForm">
         <el-form-item label="用户名" prop="name">
           <el-input v-model="registerForm.name" placeholder="新用户名" prefix-icon="el-icon-user"></el-input>
         </el-form-item>
@@ -120,7 +120,7 @@ export default {
 
 <style lang="scss" scoped>
     .xy-register-dialog /deep/ .el-dialog {
-      width: 40%;
+      width: 30%;
       border-radius: 20px;
     }
     .xy-register-dialog /deep/ .el-dialog__title{
