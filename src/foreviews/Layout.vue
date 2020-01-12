@@ -132,9 +132,7 @@ export default {
 
     avatarHandleCommand (command) {
       if (command === 'sign-in') {
-        console.log('111' + this.loginVisible)
         this.loginVisible = true
-        console.log('111' + this.loginVisible)
       };
       if (command === 'register') {
         this.loginVisible = true

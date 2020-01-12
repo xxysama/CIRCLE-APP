@@ -1,16 +1,18 @@
 <template>
 <div class="xy-login-dialog">
-<el-dialog title="注册" :visible.sync="loginVisible" @close="loginClose" :close-on-click-modal="false" :show-close="false" center>
-<el-form :model="loginForm" status-icon :rules="rules" ref="loginForm" label-width="100px">
-  <el-form-item label="用户名" prop="name">
+<el-dialog title="登录" :visible.sync="visibleTag" :show="loginVisible" @close="loginClose" :close-on-click-modal="false" :show-close="true" center>
+<el-form :model="loginForm" status-icon :rules="rules" ref="loginForm" label-width="">
+  <el-form-item label="" prop="name">
      <el-input v-model="loginForm.name" placeholder="用户名" prefix-icon="el-icon-user"></el-input>
   </el-form-item>
-  <el-form-item label="密码" prop="pass">
+  <el-form-item label="" prop="pass">
     <el-input type="password" v-model="loginForm.pass" autocomplete="off" placeholder="用户密码" prefix-icon="el-icon-lock"></el-input>
   </el-form-item>
   <el-form-item>
-    <el-button type="primary" @click="submitForm('loginForm')">提交</el-button>
-    <el-button @click="resetForm('loginForm')">重置</el-button>
+    <el-button class="reset-button" type="text" @click="resetForm('loginForm')"><i class="el-icon-refresh-right"></i>重置</el-button>
+  </el-form-item>
+  <el-form-item>
+    <el-button class="submit-button" type="primary" @click="submitForm('loginForm')"><i class="el-icon-right"></i>进入圈子</el-button>
   </el-form-item>
 </el-form>
   <div slot="footer" class="dialog-footer">
@@ -36,6 +38,7 @@ export default {
     }
 
     return {
+      visibleTag: this.loginVisible,
       formLabelWidth: '120px',
       loginForm: {
         pass: '',
@@ -59,6 +62,12 @@ export default {
     }
   },
 
+  watch: {
+    loginVisible () {
+      this.visibleTag = this.loginVisible
+    }
+  },
+
   components: {
   },
   methods: {
@@ -66,6 +75,10 @@ export default {
       // 通知父组件修改隐藏状态
       this.$emit('update:loginVisible', false)
     },
+    handleDialogClose () {
+      this.$options.methods.loginClose()
+    },
+    // 登录提交
     submitForm (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
@@ -83,6 +96,30 @@ export default {
 }
 </script>
 
-<style lang="">
+<style lang="scss" scoped>
+    .xy-login-dialog /deep/ .el-dialog {
+      width: 40%;
+      border-radius: 20px;
+    }
+    .xy-login-dialog /deep/ .el-dialog__title{
+      font-size: 24px
+    }
 
+    .xy-login-dialog /deep/ .el-form-item__content {
+      width: 60%;
+      margin-left: 20%
+    }
+    .xy-login-dialog /deep/ .el-input__inner{
+      border-radius: 20px
+    }
+    .xy-login-dialog /deep/ .reset-button{
+      float: right;
+      margin-right: 5%;
+      padding: 0;
+      margin-top: -8px
+    }
+    .xy-login-dialog /deep/ .submit-button{
+      width:100%;
+      border-radius: 20px
+    }
 </style>
