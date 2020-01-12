@@ -33,7 +33,7 @@
 
    <el-main>
       <login-form :loginVisible.sync="loginVisible"></login-form>
-
+      <register-form :registerVisible.sync="registerVisible"></register-form>
       <transition name="fade-rv" mode="out-in">
           <router-view></router-view>
       </transition>
@@ -109,6 +109,7 @@
 
 <script>
 import LoginForm from '@/components/LoginForm'
+import RegisterForm from '@/components/RegisterForm'
 
 export default {
   data () {
@@ -116,12 +117,14 @@ export default {
       activeName: 'books',
       SearchInput: '',
       logo: require('../assets/logo.png'),
-      loginVisible: false
+      loginVisible: false,
+      registerVisible: false
     }
   },
 
   components: {
-    LoginForm
+    LoginForm,
+    RegisterForm
   },
 
   methods: {
@@ -135,7 +138,7 @@ export default {
         this.loginVisible = true
       };
       if (command === 'register') {
-        this.loginVisible = true
+        this.registerVisible = true
       }
     }
 

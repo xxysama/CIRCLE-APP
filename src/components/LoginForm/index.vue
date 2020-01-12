@@ -1,25 +1,25 @@
 <template>
 <div class="xy-login-dialog">
-<el-dialog title="登录" :visible.sync="visibleTag" :show="loginVisible" @close="loginClose" :close-on-click-modal="false" :show-close="true" center>
-<el-form :model="loginForm" status-icon :rules="rules" ref="loginForm" label-width="">
-  <el-form-item label="" prop="name">
-     <el-input v-model="loginForm.name" placeholder="用户名" prefix-icon="el-icon-user"></el-input>
-  </el-form-item>
-  <el-form-item label="" prop="pass">
-    <el-input type="password" v-model="loginForm.pass" autocomplete="off" placeholder="用户密码" prefix-icon="el-icon-lock"></el-input>
-  </el-form-item>
-  <el-form-item>
-    <el-button class="reset-button" type="text" @click="resetForm('loginForm')"><i class="el-icon-refresh-right"></i>重置</el-button>
-  </el-form-item>
-  <el-form-item>
-    <el-button class="submit-button" type="primary" @click="submitForm('loginForm')"><i class="el-icon-right"></i>进入圈子</el-button>
-  </el-form-item>
-</el-form>
-  <div slot="footer" class="dialog-footer">
-    <el-button @click="loginClose">取 消</el-button>
-    <el-button type="primary" @click="loginClose">确 定</el-button>
-  </div>
-</el-dialog>
+  <el-dialog title="登录" :visible.sync="visibleTag" @close="loginClose" :close-on-click-modal="false" :show-close="true" center>
+    <el-form :model="loginForm" status-icon :rules="rules" ref="loginForm" label-width="">
+      <el-form-item label="" prop="name">
+        <el-input v-model="loginForm.name" placeholder="用户名" prefix-icon="el-icon-user"></el-input>
+      </el-form-item>
+      <el-form-item label="" prop="pass">
+        <el-input type="password" v-model="loginForm.pass" autocomplete="off" placeholder="用户密码" prefix-icon="el-icon-lock"></el-input>
+      </el-form-item>
+      <el-form-item>
+        <el-button class="reset-button" type="text" @click="resetForm('loginForm')"><i class="el-icon-refresh-right"></i>重置</el-button>
+      </el-form-item>
+      <el-form-item>
+        <el-button class="submit-button" type="primary" @click="submitForm('loginForm')"><i class="el-icon-right"></i>进入圈子</el-button>
+      </el-form-item>
+    </el-form>
+    <div slot="footer" class="dialog-footer">
+      <el-button @click="loginClose">取 消</el-button>
+      <el-button type="primary" @click="loginClose">确 定</el-button>
+    </div>
+  </el-dialog>
 </div>
 </template>
 
