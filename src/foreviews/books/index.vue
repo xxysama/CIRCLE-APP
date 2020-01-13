@@ -57,7 +57,7 @@
         </div>
   <div class="books-review" v-for="i in 4" :key="i">
     <div class="books-review-hd">
-      <el-link><el-image :src="url" :underline="false"></el-image></el-link>
+      <el-link :underline="false"><img :src="url" style="width: 100%; height: 100%" ></el-link>
     </div>
     <div class="books-review-bd">
       <el-link :underline="false" style="font-size:20px">书籍名称</el-link>
