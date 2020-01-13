@@ -18,12 +18,13 @@
      <el-col :span="8">
        <div class="header-right">
           <el-dropdown @command="avatarHandleCommand">
-            <span class="el-dropdown-link">
+            <span class="el-dropdown-link"  @click="showLoginDialog" >
               <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar>
             </span>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item command="sign-in">登录</el-dropdown-item>
-              <el-dropdown-item command="register">注册</el-dropdown-item>
+              <el-dropdown-item command="sign-in">个人主页</el-dropdown-item>
+              <el-dropdown-item command="register">账号管理</el-dropdown-item>
+              <el-dropdown-item command="register">退出</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
        </div>
@@ -33,7 +34,6 @@
 
    <el-main>
       <login-form :loginVisible.sync="loginVisible"></login-form>
-      <register-form :registerVisible.sync="registerVisible"></register-form>
       <transition name="fade-rv" mode="out-in">
           <router-view></router-view>
       </transition>
@@ -109,7 +109,6 @@
 
 <script>
 import LoginForm from '@/components/LoginForm'
-import RegisterForm from '@/components/RegisterForm'
 
 export default {
   data () {
@@ -123,8 +122,7 @@ export default {
   },
 
   components: {
-    LoginForm,
-    RegisterForm
+    LoginForm
   },
 
   methods: {
@@ -134,12 +132,11 @@ export default {
     },
 
     avatarHandleCommand (command) {
-      if (command === 'sign-in') {
-        this.loginVisible = true
-      };
-      if (command === 'register') {
-        this.registerVisible = true
-      }
+
+    },
+
+    showLoginDialog () {
+      this.loginVisible = true
     }
 
   }

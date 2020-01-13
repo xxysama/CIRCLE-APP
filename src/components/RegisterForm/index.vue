@@ -21,10 +21,6 @@
           <el-button type="primary" class="submit-button" @click="submitForm('registerForm')"><i class="el-icon-position"></i>加入圈子</el-button>
         </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="registerClose">取 消</el-button>
-        <el-button type="primary" @click="registerClose">确 定</el-button>
-      </div>
     </el-dialog>
   </div>
 </template>
