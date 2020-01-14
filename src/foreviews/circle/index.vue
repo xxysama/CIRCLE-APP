@@ -5,15 +5,13 @@
     <div>
       <h2>热门圈子</h2>
       <el-col :span="8" v-for="item in 3" :key="item">
-        <el-card :body-style="{ padding: '0px' }" shadow="hover" @click.native="openbook(item)">
+        <el-card class="hot-circle-card" :body-style="{ padding: '0px' }" shadow="hover" @click.native="openbook(item)">
           <div class="hot-circle-container">
             <div class="hot-circle-pic">
                 <img src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg" style="width: 100px; height: 100px" >
             </div>
             <div class="hot-circle-details">
-              <tr style="fongt-size:18px">
-                <td>小组名称</td>
-              </tr>
+                <h3>小组名称</h3>
                 <div>
                   化简为奢，书中自有颜如玉
                 </div>
@@ -30,13 +28,16 @@
     </div>
     <el-divider ></el-divider>
 
-    <div>
-      <h3>最近热门电影</h3>
+    <div class="classify-circles-container">
+      <el-tag
+        effect="dark">
+        文化
+      </el-tag>
     </div>
     <div>
-    <el-col :span="4" v-for="item in 8" :key="item">
-      <el-card :body-style="{ padding: '0px' }" shadow="hover" @click.native="openbook(item)">
-        <img src='../../assets/books/baiyexing.jpg' class="img">
+    <el-col :span="4" v-for="item in 6" :key="item">
+      <el-card  class="classify-circle-crad" :body-style="{ padding: '0px' }" shadow="hover" @click.native="openbook(item)">
+        <img src='' class="img">
         <div style="padding: 8px;">
           <el-link :underline="false" href="#">{{item}}</el-link>
           <div class="bottom clearfix">
@@ -46,10 +47,95 @@
       </el-card>
     </el-col>
     </div>
+
+    <div>
+      <el-tag
+      type="success"
+        effect="dark">
+        行摄
+      </el-tag>
+    </div>
+    <div>
+    <el-col :span="4" v-for="item in 6" :key="item">
+      <el-card class="classify-circle-crad" :body-style="{ padding: '0px' }" shadow="hover" @click.native="openbook(item)">
+        <img src='' class="img">
+        <div style="padding: 8px;">
+          <el-link :underline="false" href="#">{{item}}</el-link>
+          <div class="bottom clearfix">
+            <el-button type="text" class="button">作者</el-button>
+          </div>
+        </div>
+      </el-card>
+    </el-col>
+    </div>
+
+    <div class="classify-circles-container">
+      <el-tag
+        type="warning"
+        effect="dark">
+        娱乐
+      </el-tag>
+    </div>
+    <div>
+    <el-col :span="4" v-for="item in 6" :key="item">
+      <el-card  class="classify-circle-crad" :body-style="{ padding: '0px' }" shadow="hover" @click.native="openbook(item)">
+        <img src='' class="img">
+        <div style="padding: 8px;">
+          <el-link :underline="false" href="#">{{item}}</el-link>
+          <div class="bottom clearfix">
+            <el-button type="text" class="button">作者</el-button>
+          </div>
+        </div>
+      </el-card>
+    </el-col>
+    </div>
+
+    <div class="classify-circles-container">
+      <el-tag
+        type="danger"
+        effect="dark">
+        时尚
+      </el-tag>
+    </div>
+    <div>
+    <el-col :span="4" v-for="item in 6" :key="item">
+      <el-card  class="classify-circle-crad" :body-style="{ padding: '0px' }" shadow="hover" @click.native="openbook(item)">
+        <img src='' class="img">
+        <div style="padding: 8px;">
+          <el-link :underline="false" href="#">{{item}}</el-link>
+          <div class="bottom clearfix">
+            <el-button type="text" class="button">作者</el-button>
+          </div>
+        </div>
+      </el-card>
+    </el-col>
+    </div>
+
+    <div class="classify-circles-container">
+      <el-tag
+        type="info"
+        effect="dark">
+        科技
+      </el-tag>
+    </div>
+    <div>
+    <el-col :span="4" v-for="item in 6" :key="item">
+      <el-card  class="classify-circle-crad" :body-style="{ padding: '0px' }" shadow="hover" @click.native="openbook(item)">
+        <img src='' class="img">
+        <div style="padding: 8px;">
+          <el-link :underline="false" href="#">{{item}}</el-link>
+          <div class="bottom clearfix">
+            <el-button type="text" class="button">作者</el-button>
+          </div>
+        </div>
+      </el-card>
+    </el-col>
+    </div>
+
   </el-main>
   <el-aside width="25%">
     <div class="rank-list-week">
-      <h3>一周口碑榜</h3>
+      <h3>随机小组</h3>
       <div v-for="item in 10" :key="item">
         <el-link :underline='false'>{{item}}</el-link>
         <el-divider></el-divider>
@@ -140,5 +226,16 @@ export default {
   .hot-circle-op{
     float: right;
     margin-right:10px ;
+  }
+  .hot-circle-details{
+    margin-left: 120px;
+    padding-right: 10px
+  }
+  .hot-circle-card{
+    margin-bottom: 40px
+  }
+  .classify-circle-crad{
+    margin-bottom: 40px
+
   }
 </style>
