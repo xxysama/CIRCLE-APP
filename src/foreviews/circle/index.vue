@@ -29,20 +29,24 @@
     <el-divider ></el-divider>
 
     <div class="classify-circles-container">
-      <el-tag
+      <el-tag class="classify-tag"
         effect="dark">
         文化
       </el-tag>
+      <el-link :underline="false">更多<i class="el-icon-d-arrow-right"></i></el-link>
     </div>
     <div>
-    <el-col :span="4" v-for="item in 6" :key="item">
+    <el-col :span="6" v-for="item in 4" :key="item">
       <el-card  class="classify-circle-crad" :body-style="{ padding: '0px' }" shadow="hover" @click.native="openbook(item)">
-        <img src='' class="img">
+        <div>
+          <img src='' class="img" style="width: 46px; height: 46px">
+          <span class="classify-circle-title">小组名称小组名称</span>
+        </div>
         <div style="padding: 8px;">
-          <el-link :underline="false" href="#">{{item}}</el-link>
-          <div class="bottom clearfix">
-            <el-button type="text" class="button">作者</el-button>
-          </div>
+          <span :underline="false" href="#">{{item}}成员</span>
+            <div class="hot-circle-op">
+              <el-button type="text">申请</el-button>
+            </div>
         </div>
       </el-card>
     </el-col>
@@ -56,7 +60,7 @@
       </el-tag>
     </div>
     <div>
-    <el-col :span="4" v-for="item in 6" :key="item">
+    <el-col :span="6" v-for="item in 4" :key="item">
       <el-card class="classify-circle-crad" :body-style="{ padding: '0px' }" shadow="hover" @click.native="openbook(item)">
         <img src='' class="img">
         <div style="padding: 8px;">
@@ -77,7 +81,7 @@
       </el-tag>
     </div>
     <div>
-    <el-col :span="4" v-for="item in 6" :key="item">
+    <el-col :span="6" v-for="item in 4" :key="item">
       <el-card  class="classify-circle-crad" :body-style="{ padding: '0px' }" shadow="hover" @click.native="openbook(item)">
         <img src='' class="img">
         <div style="padding: 8px;">
@@ -98,7 +102,7 @@
       </el-tag>
     </div>
     <div>
-    <el-col :span="4" v-for="item in 6" :key="item">
+    <el-col :span="6" v-for="item in 4" :key="item">
       <el-card  class="classify-circle-crad" :body-style="{ padding: '0px' }" shadow="hover" @click.native="openbook(item)">
         <img src='' class="img">
         <div style="padding: 8px;">
@@ -119,7 +123,7 @@
       </el-tag>
     </div>
     <div>
-    <el-col :span="4" v-for="item in 6" :key="item">
+    <el-col :span="6" v-for="item in 4" :key="item">
       <el-card  class="classify-circle-crad" :body-style="{ padding: '0px' }" shadow="hover" @click.native="openbook(item)">
         <img src='' class="img">
         <div style="padding: 8px;">
@@ -237,5 +241,11 @@ export default {
   .classify-circle-crad{
     margin-bottom: 40px
 
+  }
+  .classify-circle-title{
+      margin-left: 10px;
+  }
+  .classify-tag{
+    margin-right: 10px
   }
 </style>

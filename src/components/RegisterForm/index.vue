@@ -117,7 +117,7 @@ export default {
 <style lang="scss" scoped>
     .xy-register-dialog /deep/ .el-dialog {
       width: 30%;
-      border-radius: 20px;
+      border-radius: 30px;
     }
     .xy-register-dialog /deep/ .el-dialog__title{
       font-size: 24px
@@ -128,7 +128,7 @@ export default {
       margin-left: 25%
     }
     .xy-register-dialog /deep/ .el-input__inner{
-      border-radius: 20px
+      border-radius: 30px
     }
     .xy-register-dialog /deep/ .reset-button{
       float: right;
@@ -138,6 +138,6 @@ export default {
     }
     .xy-register-dialog /deep/ .submit-button{
       width:100%;
-      border-radius: 20px
+      border-radius: 30px
     }
 </style>

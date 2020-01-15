@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-// eslint-disable-next-line no-unused-vars
 import ForeLayout from '@/foreviews/Layout'
 
 Vue.use(VueRouter)
@@ -27,11 +26,29 @@ const routes = [
   },
 
   {
+    path: '/books/:bid',
+    component: ForeLayout,
+    children: [{
+      path: '',
+      component: () => import('@/foreviews/bookdetails/index')
+    }]
+  },
+
+  {
     path: '/movies',
     component: ForeLayout,
     children: [{
       path: '',
       component: () => import('@/foreviews/movies/index')
+    }]
+  },
+
+  {
+    path: '/movies/:mid',
+    component: ForeLayout,
+    children: [{
+      path: '',
+      component: () => import('@/foreviews/moviedetails/index')
     }]
   },
 
@@ -64,4 +81,9 @@ const originalPush = VueRouter.prototype.push
 VueRouter.prototype.push = function push (location) {
   return originalPush.call(this, location).catch(err => err)
 }
+
+// 路由变化跳转页面回到顶部
+router.afterEach((to, from, next) => {
+  window.scrollTo(0, 0)
+})
 export default router

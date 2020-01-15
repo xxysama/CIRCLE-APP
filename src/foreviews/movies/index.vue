@@ -32,7 +32,7 @@
     </div>
     <div>
     <el-col :span="4" v-for="item in 8" :key="item">
-      <el-card :body-style="{ padding: '0px' }" shadow="hover" @click.native="openbook(item)">
+      <el-card :body-style="{ padding: '0px' }" shadow="hover" @click.native="showmovie(item)">
         <img src='../../assets/books/baiyexing.jpg' class="img">
         <div style="padding: 8px;">
           <el-link :underline="false" href="#">{{item}}</el-link>
@@ -98,8 +98,9 @@ export default {
 
   },
   methods: {
-    openbook (bid) {
-      console.log(bid)
+    showmovie (mid) {
+      console.log(mid)
+      this.$router.push({ path: '/movies/' + mid })
     },
     shiftClick (tab, event) {
       console.log(tab.name)

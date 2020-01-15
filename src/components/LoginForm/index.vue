@@ -115,7 +115,7 @@ export default {
 <style lang="scss" scoped>
     .xy-login-dialog /deep/ .el-dialog {
       width: 30%;
-      border-radius: 20px;
+      border-radius: 30px;
     }
     .xy-login-dialog /deep/ .el-dialog__title{
       font-size: 24px
@@ -126,7 +126,7 @@ export default {
       margin-left: 20%
     }
     .xy-login-dialog /deep/ .el-input__inner{
-      border-radius: 20px
+      border-radius: 30px
     }
     .xy-login-dialog /deep/ .reset-button{
       float: right;
@@ -136,7 +136,7 @@ export default {
     }
     .xy-login-dialog /deep/ .submit-button{
       width:100%;
-      border-radius: 20px
+      border-radius: 30px
     }
     .other-interface{
       text-align:center;

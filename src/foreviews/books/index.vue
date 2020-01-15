@@ -92,7 +92,8 @@ export default {
   },
   methods: {
     openbook (bid) {
-      console.log(bid)
+      console.log('跳转前传 ' + bid)
+      this.$router.push({ path: '/books/' + bid })
     }
   }
 

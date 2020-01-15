@@ -139,6 +139,10 @@ export default {
       this.loginVisible = true
     }
 
+  },
+
+  mounted () {
+
   }
 }
 </script>
