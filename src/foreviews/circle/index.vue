@@ -174,7 +174,7 @@ export default {
 }
 </script>
 
-<style lang="less">
+<style>
   .bottom {
     margin-top: 8px;
     line-height: 12px;

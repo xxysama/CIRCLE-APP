@@ -167,7 +167,18 @@ export default {
     text-decoration: none;
     color: gray
   }
+  /*aside 侧边 样式*/
+  .dynamic-aside{
+    margin-left: 70px;
+    margin-right: 40px;
+  }
+  .dynamic-tag-container{
+    margin-bottom: 50px;
+  }
 
+</style>
+
+<style scoped>
   .dynamic-hot-review{
     margin-left: 6%;
     margin-right: 25%
@@ -195,18 +206,6 @@ export default {
   margin: 50px 0;
   }
 
-  /*aside 侧边 样式*/
-  .dynamic-aside{
-    margin-left: 70px;
-    margin-right: 40px;
-  }
-  .dynamic-tag-container{
-    margin-bottom: 50px;
-  }
-
-</style>
-
-<style scoped>
   .dy-picture {
     margin-top: 20px;
     margin-right: 15px;

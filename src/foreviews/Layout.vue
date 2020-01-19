@@ -23,6 +23,7 @@
             </span>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item command="sign-in">个人主页</el-dropdown-item>
+              <el-dropdown-item command="register">收藏夹</el-dropdown-item>
               <el-dropdown-item command="register">账号管理</el-dropdown-item>
               <el-dropdown-item command="register">退出</el-dropdown-item>
             </el-dropdown-menu>
