@@ -111,6 +111,7 @@
             </div>
             <el-divider class="dynamic-divider"></el-divider>
             </div>
+            <el-link :underline="false"><i class="el-icon-arrow-right"></i>更多短评</el-link>
         </div>
         </el-main>
         <el-aside width="25%">
@@ -174,7 +175,9 @@ export default {
     margin-top: 8px;
     line-height: 12px;
   }
-
+  .img{
+    width: 100%;
+  }
   .button {
     padding: 0;
     float: left;
