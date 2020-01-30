@@ -68,6 +68,33 @@ const routes = [
       path: '',
       component: () => import('@/foreviews/dynamic/index')
     }]
+  },
+
+  {
+    path: '/homepage',
+    component: ForeLayout,
+    children: [{
+      path: '',
+      component: () => import('@/foreviews/homepage/index')
+    }]
+  },
+
+  {
+    path: '/favorites',
+    component: ForeLayout,
+    children: [{
+      path: '',
+      component: () => import('@/foreviews/favorites/index')
+    }]
+  },
+
+  {
+    path: '/account',
+    component: ForeLayout,
+    children: [{
+      path: '',
+      component: () => import('@/foreviews/account/index')
+    }]
   }
 ]
 

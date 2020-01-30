@@ -22,10 +22,10 @@
               <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar>
             </span>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item command="sign-in">个人主页</el-dropdown-item>
-              <el-dropdown-item command="register">收藏夹</el-dropdown-item>
-              <el-dropdown-item command="register">账号管理</el-dropdown-item>
-              <el-dropdown-item command="register">退出</el-dropdown-item>
+              <el-dropdown-item command="homepage">个人主页</el-dropdown-item>
+              <el-dropdown-item command="favorites">收藏夹</el-dropdown-item>
+              <el-dropdown-item command="account">账号管理</el-dropdown-item>
+              <el-dropdown-item command="logout">退出</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
        </div>
@@ -133,7 +133,11 @@ export default {
     },
 
     avatarHandleCommand (command) {
-
+      if (command === 'logout') {
+        this.$router.push({ path: '/' + 'books' })
+      } else {
+        this.$router.push({ path: '/' + command })
+      }
     },
 
     showLoginDialog () {
