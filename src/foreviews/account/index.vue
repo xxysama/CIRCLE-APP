@@ -16,12 +16,12 @@
                 <el-form-item>
                     用于找回密码，请务必真实有效
                 </el-form-item>
-                <el-form-item label="密码" prop="pass">
+                <el-form-item label="密码">
                     <el-button type="text" class="submit-button" @click="dialogFormVisible = true">重置密码</el-button>
                 </el-form-item>
-                <el-form-item>
+                <!-- <el-form-item>
                     <el-button class="reset-button" type="text" @click="resetForm('accountResetForm')"><i class="el-icon-refresh-right"></i>重置</el-button>
-                </el-form-item>
+                </el-form-item>-->
                 <el-form-item>
                     <el-button type="primary" class="submit-button" @click="submitForm('accountResetForm')">更新设置</el-button>
                 </el-form-item>
@@ -63,7 +63,7 @@ export default {
   data () {
     var validateOldPass = (rule, value, callback) => {
       if (value === '') {
-        callback(new Error('请输入密码'))
+        callback(new Error('请输入旧密码'))
       } else {
         if (this.passResetForm.checkPass !== '') {
           // this.$refs.passResetForm.validateField('checkPass')
@@ -142,9 +142,9 @@ export default {
         }
       })
     },
-    resetForm (formName) {
-      this.$refs[formName].resetFields()
-    },
+    // resetForm (formName) {
+    //   this.$refs[formName].resetFields()
+    // },
     resetPass () {
 
     }
