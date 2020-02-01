@@ -3,12 +3,31 @@
     <el-container>
         <el-main>
             <div class="homepage-head">
-              <h2>电影名称</h2>
+              <img src='' class="user-img">
+              <h2>测试用户</h2>
+              <h4>我的签名档</h4>
             </div>
-            <h3 style="color:#007722">剧情简介</h3>
-            <el-divider></el-divider>
-            <div class="homepage-content">
-                <p>一位未来的工薪阶层父亲反复梦到被未知力量摧毁。当他的噩梦开始影响自己与家人的关系时，他便很快意识到，外星人的无情攻击开始摧毁地球，而这些噩梦也许是骇人现实的关键线索。随着入侵者一波又一波的凌厉攻击，他必须寻找保护家人的力量，并弄清自己的真实身份。</p>
+            <div>
+              <h3 style="color:#007722">碎碎念</h3>
+              <el-divider></el-divider>
+              <div class="homepage-content">
+                  <p>一位未来的工薪阶层父亲反复梦到被未知力量摧毁。当他的噩梦开始影响自己与家人的关系时，他便很快意识到，外星人的无情攻击开始摧毁地球，而这些噩梦也许是骇人现实的关键线索。随着入侵者一波又一波的凌厉攻击，他必须寻找保护家人的力量，并弄清自己的真实身份。</p>
+              </div>
+            </div>
+
+            <div class="homepage-circle">
+              <h3 style="color:#007722">我的圈子</h3>
+              <el-divider></el-divider>
+              <div class="homepage-content">
+                <el-col :span="6" v-for="item in 4" :key="item">
+                  <el-card  class="classify-circle-crad" :body-style="{ padding: '0px' }" shadow="hover">
+                    <img src='' class="img">
+                    <div style="padding: 8px;">
+                      <el-link :underline="false" href="#">{{item}}</el-link>
+                    </div>
+                  </el-card>
+                </el-col>
+              </div>
             </div>
 
             <div class="homepage-seen-movies">
@@ -27,10 +46,12 @@
               <el-input
                 type="textarea"
                 :autosize="{ minRows: 2, maxRows: 4}"
+                maxlength="200"
                 placeholder="请输入内容"
-                v-model="textarea">
+                v-model="textarea"
+                show-word-limit>
               </el-input>
-              <el-button>留言</el-button>
+              <el-button style="float:right; margin-top:10px" @click="leavingMsg()">留言</el-button>
             </div>
 
             <el-divider></el-divider>
@@ -40,9 +61,7 @@
             </div>
             <div class="homepage-comments-bd">
                 <el-link :underline="false" style="font-size:20px">用户名称</el-link>
-                <div>
-                <time class="time">1月13日</time>
-                </div>
+                <time class="time" style="margin-left:10px">1月13日</time>
                 <!-- <div class="homepage-comments-meta">
                 </div> -->
                 <div class="homepage-comments-content">
@@ -76,14 +95,21 @@
 export default {
   data () {
     return {
-      textarea: ''
+      textarea: '',
+      dyAvatar: ''
     }
   },
   components: {
   },
 
   methods: {
-
+    leavingMsg () {
+      this.$notify({
+        title: '成功',
+        message: '留言成功！',
+        type: 'success'
+      })
+    }
   },
 
   mounted () {
@@ -126,6 +152,18 @@ export default {
 </style>
 
 <style lang="scss" scoped>
+    .user-img {
+      height: 100px;
+      width: 100px;
+      margin-right: 20px;
+      float: left;
+    }
+    .homepage-head {
+      height: 120px;
+    }
+    .homepage-circle{
+      height: 200px;
+    }
     .homepage-aside{
     margin-left: 70px;
     margin-right: 40px;
@@ -140,6 +178,9 @@ export default {
     .homepage-seen-movies{
         height: 300px;
         margin-bottom: 40px
+    }
+    .homepage-comments-input{
+      height: 120px;
     }
     .homepage-comments-hd {
         float: left;

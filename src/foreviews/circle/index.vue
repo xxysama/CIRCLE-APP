@@ -112,7 +112,7 @@
           </div>
         </div>
       </el-card>
-    </el-col>
+     </el-col>
     </div>
 
     <div class="classify-circles-container">
