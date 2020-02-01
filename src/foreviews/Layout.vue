@@ -23,7 +23,7 @@
             </span>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item command="homepage">个人主页</el-dropdown-item>
-              <el-dropdown-item command="favorites">收藏夹</el-dropdown-item>
+              <el-dropdown-item command="favorites">收藏列表</el-dropdown-item>
               <el-dropdown-item command="account">账号管理</el-dropdown-item>
               <el-dropdown-item command="logout">退出</el-dropdown-item>
             </el-dropdown-menu>
