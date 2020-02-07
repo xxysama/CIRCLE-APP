@@ -16,6 +16,12 @@ const routes = [
     }]
   },
 
+  // 登陆
+  {
+    path: '/toLogin',
+    component: () => import('@/foreviews/login/index')
+  },
+
   {
     path: '/books',
     component: ForeLayout,

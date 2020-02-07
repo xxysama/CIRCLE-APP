@@ -2,7 +2,7 @@
 <div class="lr-dialog-container">
 
   <div class="xy-login-dialog">
-    <el-dialog title="登录" :visible.sync="visibleTag" @close="loginClose" :close-on-click-modal="false" :show-close="true" center>
+    <el-dialog title="登录" :visible.sync="visibleTag" @close="loginClose" :close-on-click-modal="false" :show-close="false" :modal="false" center>
       <el-form :model="loginForm" status-icon :rules="rules" ref="loginForm" label-width="">
         <el-form-item label="" prop="name">
           <el-input v-model="loginForm.name" placeholder="用户名" prefix-icon="el-icon-user"></el-input>
@@ -127,6 +127,8 @@ export default {
 <style lang="scss" scoped>
     .xy-login-dialog /deep/ .el-dialog {
       width: 30%;
+      // background-color: r
+      opacity: 0.9;
       border-radius: 30px;
     }
     .xy-login-dialog /deep/ .el-dialog__title{

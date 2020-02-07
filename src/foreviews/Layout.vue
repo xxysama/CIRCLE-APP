@@ -34,7 +34,6 @@
   </el-header>
 
    <el-main>
-      <login-form :loginVisible.sync="loginVisible"></login-form>
       <transition name="fade-rv" mode="out-in">
           <router-view></router-view>
       </transition>
@@ -109,21 +108,18 @@
 </style>
 
 <script>
-import LoginForm from '@/components/LoginForm'
 
 export default {
   data () {
     return {
       activeName: 'books',
       SearchInput: '',
-      logo: require('../assets/logo.png'),
-      loginVisible: false,
-      registerVisible: false
+      logo: require('../assets/logo.png')
     }
   },
 
   components: {
-    LoginForm
+
   },
 
   methods: {
@@ -141,7 +137,8 @@ export default {
     },
 
     showLoginDialog () {
-      this.loginVisible = true
+      // this.loginVisible = true
+      this.$router.push({ path: '/' + 'toLogin' })
     }
 
   },
