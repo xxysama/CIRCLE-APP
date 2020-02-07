@@ -93,14 +93,26 @@ export default {
     },
     // 登录提交
     submitForm (formName) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          alert('submit!')
-        } else {
-          console.log('error submit!!')
-          return false
-        }
+      // this.$refs[formName].validate((valid) => {
+      //   if (valid) {
+      //     alert('submit!')
+      //   } else {
+      //     console.log('error submit!!')
+      //     return false
+      //   }
+      // })
+      this.$axios.post('/login', {
+        username: this.loginForm.name,
+        password: this.loginForm.pass
       })
+        .then(successResponse => {
+          if (successResponse.data.code === 200) {
+            this.$router.replace({ path: '/index' })
+          }
+        })
+        .catch(failRespose => {
+
+        })
     },
     resetForm (formName) {
       this.$refs[formName].resetFields()
