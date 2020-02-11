@@ -100,7 +100,35 @@ export default {
     submitForm (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          alert('submit!')
+          this.$axios.post('/register', {
+            userName: this.registerForm.name,
+            password: this.registerForm.pass,
+            email: this.registerForm.email
+          })
+            .then(response => {
+              console.log(response)
+              if (response.data.code === '300') {
+                this.$notify({
+                  title: '成功',
+                  message: response.data.msg,
+                  type: 'success'
+                })
+
+                // 重置表单以及隐藏注册框
+                this.resetForm('registerForm')
+                this.$emit('update:registerVisible', false)
+              };
+
+              if (response.data.code === '301') {
+                this.$notify.error({
+                  title: '错误',
+                  message: response.data.msg
+                })
+              }
+            })
+            .catch(response => {
+
+            })
         } else {
           console.log('error submit!!')
           return false

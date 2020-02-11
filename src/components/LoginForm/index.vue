@@ -107,7 +107,7 @@ export default {
       })
         .then(successResponse => {
           if (successResponse.data.code === 200) {
-            this.$router.replace({ path: '/index' })
+            this.$router.replace({ path: '/' })
           }
         })
         .catch(failRespose => {
