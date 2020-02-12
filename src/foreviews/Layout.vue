@@ -130,6 +130,18 @@ export default {
 
     avatarHandleCommand (command) {
       if (command === 'logout') {
+        var _this = this
+        this.$axios.get('/logout').then(response => {
+          if (response.data.code === '403') {
+            _this.$store.commit('logout')
+            _this.$router.replace('/toLogin')
+            this.$notify({
+              title: '成功',
+              message: response.data.msg,
+              type: 'success'
+            })
+          }
+        })
         this.$router.push({ path: '/' + 'books' })
       } else {
         this.$router.push({ path: '/' + command })

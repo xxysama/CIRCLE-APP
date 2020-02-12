@@ -4,11 +4,11 @@
   <div class="xy-login-dialog">
     <el-dialog title="登录" :visible.sync="visibleTag" @close="loginClose" :close-on-click-modal="false" :show-close="false" :modal="false" center>
       <el-form :model="loginForm" status-icon :rules="rules" ref="loginForm" label-width="">
-        <el-form-item label="" prop="name">
-          <el-input v-model="loginForm.name" placeholder="用户名" prefix-icon="el-icon-user"></el-input>
+        <el-form-item label="" prop="username">
+          <el-input v-model="loginForm.username" placeholder="用户名" prefix-icon="el-icon-user"></el-input>
         </el-form-item>
-        <el-form-item label="" prop="pass">
-          <el-input type="password" v-model="loginForm.pass" placeholder="用户密码" prefix-icon="el-icon-lock" show-password></el-input>
+        <el-form-item label="" prop="password">
+          <el-input type="password" v-model="loginForm.password" placeholder="用户密码" prefix-icon="el-icon-lock" show-password></el-input>
         </el-form-item>
         <el-form-item>
           <el-button class="reset-button" type="text" @click="resetForm('loginForm')"><i class="el-icon-refresh-right"></i>重置</el-button>
@@ -42,14 +42,14 @@ export default {
       registerVisible: false,
       formLabelWidth: '120px',
       loginForm: {
-        pass: '',
-        name: ''
+        password: '',
+        username: ''
       },
       rules: {
-        name: [
+        username: [
           { required: true, message: '请输入新用户名', trigger: 'blur' }
         ],
-        pass: [
+        password: [
           { required: true, message: '请输入密码', trigger: 'blur' }
         ]
       }
@@ -73,6 +73,7 @@ export default {
     RegisterForm
   },
   methods: {
+
     loginClose () {
       // 通知父组件修改隐藏状态
       this.$emit('update:loginVisible', false)
@@ -82,26 +83,32 @@ export default {
     },
     // 登录提交
     submitForm (formName) {
+      console.log(this.$store.state)
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          alert('submit!')
+          var _this = this
+          console.log(this.$store.state)
           this.$axios.post('/login', {
-            userName: this.loginForm.name,
-            password: this.loginForm.pass
+            userName: this.loginForm.username,
+            password: this.loginForm.password
           })
             .then(response => {
               // 登录成功
-              if (response.data.code === 400) {
+              console.log(response)
+              if (response.data.code === '400') {
                 this.$notify({
                   title: '成功',
                   message: response.data.msg,
                   type: 'success'
                 })
-                this.$store.commit('login', this.loginForm)
+                _this.$store.commit('login', _this.loginForm)
 
                 var path = this.$route.query.redirect
 
-                this.$router.replace({ path: path === '/' || path === undefined ? '/index' : path })
+                console.log('储存的地址 ' + path)
+
+                this.$router.replace({ path: path === '/' || path === undefined ? '/books' : path })
+                // this.$router.replace({ path: '/' })
               }
 
               // 登录失败
