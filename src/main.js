@@ -17,6 +17,22 @@ Vue.config.productionTip = false
 
 Vue.use(ElementUI, { locale })
 
+router.beforeEach((to, from, next) => {
+  if (to.meta.requireAuth) {
+    if (store.state.user.username) {
+      next()
+    } else {
+      next({
+        path: 'toLogin',
+        query: { redirect: to.fullPath }
+      })
+    }
+  } else {
+    next()
+  }
+}
+)
+
 new Vue({
   el: '#app',
   router,

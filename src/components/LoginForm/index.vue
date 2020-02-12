@@ -8,7 +8,7 @@
           <el-input v-model="loginForm.name" placeholder="用户名" prefix-icon="el-icon-user"></el-input>
         </el-form-item>
         <el-form-item label="" prop="pass">
-          <el-input type="password" v-model="loginForm.pass" autocomplete="off" placeholder="用户密码" prefix-icon="el-icon-lock"></el-input>
+          <el-input type="password" v-model="loginForm.pass" placeholder="用户密码" prefix-icon="el-icon-lock" show-password></el-input>
         </el-form-item>
         <el-form-item>
           <el-button class="reset-button" type="text" @click="resetForm('loginForm')"><i class="el-icon-refresh-right"></i>重置</el-button>
@@ -37,17 +37,6 @@ import RegisterForm from '@/components/RegisterForm'
 
 export default {
   data () {
-    var validateName = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('请输入用户名'))
-      }
-    }
-    var validatePass = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('请输入密码'))
-      }
-    }
-
     return {
       visibleTag: this.loginVisible,
       registerVisible: false,
@@ -58,10 +47,10 @@ export default {
       },
       rules: {
         name: [
-          { validator: validateName, trigger: 'blur' }
+          { required: true, message: '请输入新用户名', trigger: 'blur' }
         ],
         pass: [
-          { validator: validatePass, trigger: 'blur' }
+          { required: true, message: '请输入密码', trigger: 'blur' }
         ]
       }
     }
@@ -93,26 +82,44 @@ export default {
     },
     // 登录提交
     submitForm (formName) {
-      // this.$refs[formName].validate((valid) => {
-      //   if (valid) {
-      //     alert('submit!')
-      //   } else {
-      //     console.log('error submit!!')
-      //     return false
-      //   }
-      // })
-      this.$axios.post('/login', {
-        username: this.loginForm.name,
-        password: this.loginForm.pass
-      })
-        .then(successResponse => {
-          if (successResponse.data.code === 200) {
-            this.$router.replace({ path: '/' })
-          }
-        })
-        .catch(failRespose => {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          alert('submit!')
+          this.$axios.post('/login', {
+            userName: this.loginForm.name,
+            password: this.loginForm.pass
+          })
+            .then(response => {
+              // 登录成功
+              if (response.data.code === 400) {
+                this.$notify({
+                  title: '成功',
+                  message: response.data.msg,
+                  type: 'success'
+                })
+                this.$store.commit('login', this.loginForm)
 
-        })
+                var path = this.$route.query.redirect
+
+                this.$router.replace({ path: path === '/' || path === undefined ? '/index' : path })
+              }
+
+              // 登录失败
+              if (response.data.code === '401' || response.data.code === '402') {
+                this.$notify.error({
+                  title: '错误',
+                  message: response.data.msg
+                })
+              }
+            })
+            .catch(failRespose => {
+
+            })
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
     },
     resetForm (formName) {
       this.$refs[formName].resetFields()

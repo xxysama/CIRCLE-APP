@@ -36,7 +36,10 @@ const routes = [
     component: ForeLayout,
     children: [{
       path: '',
-      component: () => import('@/foreviews/bookdetails/index')
+      component: () => import('@/foreviews/bookdetails/index'),
+      meta: {
+        requireAuth: true
+      }
     }]
   },
 
@@ -54,7 +57,10 @@ const routes = [
     component: ForeLayout,
     children: [{
       path: '',
-      component: () => import('@/foreviews/moviedetails/index')
+      component: () => import('@/foreviews/moviedetails/index'),
+      meta: {
+        requireAuth: true
+      }
     }]
   },
 
@@ -72,7 +78,10 @@ const routes = [
     component: ForeLayout,
     children: [{
       path: '',
-      component: () => import('@/foreviews/dynamic/index')
+      component: () => import('@/foreviews/dynamic/index'),
+      meta: {
+        requireAuth: true
+      }
     }]
   },
 

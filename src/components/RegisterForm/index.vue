@@ -107,6 +107,8 @@ export default {
           })
             .then(response => {
               console.log(response)
+
+              // 注册成功
               if (response.data.code === '300') {
                 this.$notify({
                   title: '成功',
@@ -117,9 +119,10 @@ export default {
                 // 重置表单以及隐藏注册框
                 this.resetForm('registerForm')
                 this.$emit('update:registerVisible', false)
-              };
+              }
 
-              if (response.data.code === '301') {
+              // 邮箱已经注册 用户名已经使用
+              if (response.data.code === '301' || response.data.code === '302') {
                 this.$notify.error({
                   title: '错误',
                   message: response.data.msg
