@@ -14,13 +14,13 @@
 
     <h3>热门书籍</h3>
     <el-divider></el-divider>
-    <el-col :span="4" v-for="item in 10" :key="item">
+    <el-col :span="4" v-for="(item,i) in homeBookList" :key="i">
       <el-card :body-style="{ padding: '0px' }" shadow="hover" @click.native="openbook(item)">
-        <img src='../../assets/books/baiyexing.jpg' class="img">
-        <div style="padding: 8px;">
-          <el-link :underline="false" href="#">{{item}}</el-link>
-          <div class="bottom clearfix">
-            <el-button type="text" class="button">作者</el-button>
+        <img :src='item.imgSrc' class="img-book">
+        <div class="book-bottom">
+          <el-link :underline="false" href="#">{{item.bookName}}</el-link>
+          <div class="book-author">
+            {{ item.author }}
           </div>
         </div>
     </el-card>
@@ -84,44 +84,54 @@ export default {
   data () {
     return {
       url: require('../../assets/books/baiyexing.jpg'),
-      valueRate: 2.7
+      valueRate: 2.7,
+      homeBookList: [
+      ]
     }
   },
   components: {
 
   },
   methods: {
+    getHomeBooks () {
+      var _this = this
+      this.$axios.get('book/list/latest')
+        .then(response => {
+          console.log(response.data)
+          console.log('测试获取' + _this.homeBookList.length)
+          _this.homeBookList = response.data
+          console.log('测试获取' + _this.homeBookList)
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+    },
+
     openbook (bid) {
       console.log('跳转前传 ' + bid)
       this.$router.push({ path: '/books/' + bid })
     }
+  },
+
+  mounted () {
+    var _this = this
+    this.$axios.get('book/list/latest')
+      .then(response => {
+        console.log(response.data)
+        console.log('测试获取' + _this.homeBookList.length)
+        _this.homeBookList = response.data
+        console.log('测试获取' + _this.homeBookList)
+      })
+      .catch(function (error) {
+        console.log(error)
+      })
   }
 
 }
 </script>
 
 <style>
-  .bottom {
-    margin-top: 8px;
-    line-height: 12px;
-  }
 
-  .button {
-    padding: 0;
-    float: left;
-  }
-  .img{
-    width: 100%;
-  }
-  .clearfix:before,
-  .clearfix:after {
-      display: table;
-      content: "";
-  }
-
-  .clearfix:after {
-      clear: both
-  }
   .el-container {
     margin-left: 5%
   }
@@ -140,7 +150,27 @@ export default {
     text-decoration: none;
     color: gray
   }
-  /*轮播图样式*/
+
+</style>
+
+<style scoped>
+  .img-book{
+    width: 115px;
+    height: 172px;
+  }
+  .book-author {
+    margin-top: 8px;
+    line-height: 10px;
+    font-size: 13px;
+  }
+
+  .book-bottom {
+    padding-left: 8px;
+    padding-top: 0px;
+    padding-bottom: 10px;
+  }
+
+ /*轮播图样式*/
   .books-carousel-item h3 {
     color: #475669;
     font-size: 18px;
@@ -197,5 +227,4 @@ export default {
   .book-tag-container{
     margin-bottom: 50px;
   }
-
 </style>

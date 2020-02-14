@@ -14,7 +14,7 @@
         <el-menu-item v-for="(item,i) in navList" :key="i" :index="item.name">
           {{ item.navItem }}
         </el-menu-item>
-        <span class="title-span" style="">White Jotter - Your Mind Palace</span>
+          <span class="title-span" style="">Taking an abundant view, well grounded</span>
         <el-input
           placeholder="快速搜索..."
           prefix-icon="el-icon-search"
@@ -124,7 +124,6 @@ export default {
         { name: '/dynamic', navItem: '动态' } ],
       keywords: '',
       path: '',
-
       activeName: 'books',
       SearchInput: '',
       logo: require('../assets/logo.png')
@@ -139,24 +138,8 @@ export default {
 
     logout () {
       var _this = this
-      this.$axios.get('/logout').then(response => {
-        if (response.data.code === '403') {
-          _this.$store.commit('logout')
-          _this.$router.replace('/toLogin')
-          this.$notify({
-            title: '成功',
-            message: response.data.msg,
-            type: 'success'
-          })
-        }
-      })
-      this.$router.push({ path: '/' + 'books' })
-    },
-
-    avatarHandleCommand (command) {
-      if (command === 'logout') {
-        var _this = this
-        this.$axios.get('/logout').then(response => {
+      this.$axios.get('/logout')
+        .then(response => {
           if (response.data.code === '403') {
             _this.$store.commit('logout')
             _this.$router.replace('/toLogin')
@@ -167,6 +150,30 @@ export default {
             })
           }
         })
+        .catch(function (error) {
+          console.log(error)
+        })
+      this.$router.push({ path: '/' + 'books' })
+    },
+
+    avatarHandleCommand (command) {
+      if (command === 'logout') {
+        var _this = this
+        this.$axios.get('/logout')
+          .then(response => {
+            if (response.data.code === '403') {
+              _this.$store.commit('logout')
+              _this.$router.replace('/toLogin')
+              this.$notify({
+                title: '成功',
+                message: response.data.msg,
+                type: 'success'
+              })
+            }
+          })
+          .catch(function (error) {
+            console.log(error)
+          })
         this.$router.push({ path: '/' + 'books' })
       } else {
         this.$router.push({ path: '/' + command })
