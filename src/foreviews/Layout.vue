@@ -2,34 +2,38 @@
  <div>
 <el-container>
   <el-header>
-  <el-row :gutter="20">
-    <el-col :span="8">
-        <!-- <el-image class="logo-img" :src="logo"></el-image> -->
-        <img src="../assets/logo.png" class="logo-img">
-    </el-col>
-    <el-col :span="8">
-      <el-tabs v-model="activeName" stretch @tab-click="navHandleClick">
-        <el-tab-pane label="读书" name="books"></el-tab-pane>
-        <el-tab-pane label="电影" name="movies"></el-tab-pane>
-        <el-tab-pane label="圈子" name="circle"></el-tab-pane>
-        <el-tab-pane label="动态" name="dynamic"></el-tab-pane>
-      </el-tabs>
-    </el-col>
-     <el-col :span="8">
-       <div class="header-right">
-          <el-dropdown @command="avatarHandleCommand">
-            <span class="el-dropdown-link"  @click="showLoginDialog" >
-              <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar>
-            </span>
-            <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item command="homepage">个人主页</el-dropdown-item>
-              <el-dropdown-item command="favorites">收藏列表</el-dropdown-item>
-              <el-dropdown-item command="account">账号管理</el-dropdown-item>
-              <el-dropdown-item command="logout">退出</el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
-       </div>
-     </el-col>
+    <el-row :gutter="20">
+      <el-menu
+        :default-active="path"
+        router
+        mode="horizontal"
+        background-color="white"
+        text-color="#222"
+        active-text-color="red"
+        style="min-width: 1300px">
+        <el-menu-item v-for="(item,i) in navList" :key="i" :index="item.name">
+          {{ item.navItem }}
+        </el-menu-item>
+        <span class="title-span" style="">White Jotter - Your Mind Palace</span>
+        <el-input
+          placeholder="快速搜索..."
+          prefix-icon="el-icon-search"
+          size="medium"
+          style="width: 300px;position:absolute;margin-top: 12px;right: 18%"
+          v-model="keywords">
+        </el-input>
+        <el-dropdown style="position:absolute;margin-top: 12px;right: 4%" @command="avatarHandleCommand">
+          <span @click="showLoginDialog" >
+            <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar>
+          </span>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item command="homepage">个人主页</el-dropdown-item>
+            <el-dropdown-item command="favorites">收藏列表</el-dropdown-item>
+            <el-dropdown-item command="account">账号管理</el-dropdown-item>
+            <el-dropdown-item command="logout">退出</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+      </el-menu>
     </el-row>
   </el-header>
 
@@ -62,6 +66,20 @@
 </template>
 
 <style>
+
+  .fade-rv-enter-active, .fade-rv-leave-active {
+  transition: opacity .5s;
+}
+  .fade-rv-enter, .fade-rv-leave-to  {
+  opacity: 0;
+}
+
+</style>
+<style scoped>
+  .row-bg {
+    padding: 10px 0;
+    background-color: #0a3ca1;
+  }
   .el-row {
     margin-bottom: 20px;
     margin-top: 20px;
@@ -69,16 +87,6 @@
   .grid-content {
     border-radius: 4px;
     min-height: 36px;
-  }
-  .row-bg {
-    padding: 10px 0;
-    background-color: #f9fafc;
-  }
-  .el-tabs__item {
-    font-size: 19px ! important;
-  }
-  .header-right {
-    margin-left: 70%;
   }
   .el-footer {
     color: #333;
@@ -95,15 +103,12 @@
     margin-left: 5%;
     margin-right: 5%
   }
-  .fade-rv-enter-active, .fade-rv-leave-active {
-  transition: opacity .5s;
-}
-  .fade-rv-enter, .fade-rv-leave-to  {
-  opacity: 0;
-}
-  .logo-img {
-    margin-top: -10px;
-    width: 70%;
+  .title-span{
+    position: absolute;
+    padding-top: 20px;
+    right: 43%;
+    font-size: 20px;
+    font-weight: bold
   }
 </style>
 
@@ -112,6 +117,14 @@
 export default {
   data () {
     return {
+      navList: [
+        { name: '/books', navItem: '读书' },
+        { name: '/movies', navItem: '观影' },
+        { name: '/circle', navItem: '圈子' },
+        { name: '/dynamic', navItem: '动态' } ],
+      keywords: '',
+      path: '',
+
       activeName: 'books',
       SearchInput: '',
       logo: require('../assets/logo.png')
@@ -123,9 +136,21 @@ export default {
   },
 
   methods: {
-    navHandleClick (tab, event) {
-      console.log(tab.name)
-      this.$router.push({ path: '/' + tab.name })
+
+    logout () {
+      var _this = this
+      this.$axios.get('/logout').then(response => {
+        if (response.data.code === '403') {
+          _this.$store.commit('logout')
+          _this.$router.replace('/toLogin')
+          this.$notify({
+            title: '成功',
+            message: response.data.msg,
+            type: 'success'
+          })
+        }
+      })
+      this.$router.push({ path: '/' + 'books' })
     },
 
     avatarHandleCommand (command) {
@@ -156,7 +181,13 @@ export default {
   },
 
   mounted () {
-
+    // 获得第一级路由，以设置导航栏高亮
+    var x = this.$route.path.indexOf('/', 1)
+    if (x !== -1) {
+      this.path = this.$route.path.substring(0, x)
+    } else {
+      this.path = this.$route.path
+    }
   }
 }
 </script>
