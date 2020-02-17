@@ -18,7 +18,7 @@
       <el-card :body-style="{ padding: '0px' }" shadow="hover" @click.native="openbook(item)">
         <img :src='item.imgSrc' class="img-book">
         <div class="book-bottom">
-          <el-link :underline="false" href="#">{{item.bookName}}</el-link>
+          <el-link :underline="false" href="#">{{item.bookName | ellipsis}}</el-link>
           <div class="book-author">
             {{ item.author }}
           </div>
@@ -107,9 +107,9 @@ export default {
         })
     },
 
-    openbook (bid) {
-      console.log('跳转前传 ' + bid)
-      this.$router.push({ path: '/books/' + bid })
+    openbook (item) {
+      console.log('跳转前传 ' + item.bookid)
+      this.$router.push({ path: '/books/' + item.bookId })
     }
   },
 
@@ -125,6 +125,18 @@ export default {
       .catch(function (error) {
         console.log(error)
       })
+  },
+
+  filters: {
+    // 书名超过字数 省略
+    ellipsis (value) {
+      if (!value) return ''
+      if (!value) return ''
+      if (value.length > 8) {
+        return value.slice(0, 8) + '...'
+      }
+      return value
+    }
   }
 
 }
@@ -158,6 +170,7 @@ export default {
     width: 115px;
     height: 172px;
   }
+
   .book-author {
     margin-top: 8px;
     line-height: 10px;

@@ -5,17 +5,17 @@
             <div>
             <h2>图书名称</h2>
             </div>
-            <div class="book-info-container">
+            <div class="book-info-container" :v-model="bookItem">
                 <div class="book-img">
-                    <el-image style="width: 135px; height: 200px" ></el-image>
+                    <el-image :src="bookItem.imgSrc" style="width: 135px; height: 200px" ></el-image>
                 </div>
                 <div class="book-info">
-                    <p>作者:</p>
-                    <p>原作名:</p>
-                    <p>出版年</p>
-                    <p>页数</p>
-                    <p>定价</p>
-                    <p>ISBN</p>
+                    <p>作者：{{bookItem.author}}</p>
+                    <p>原作名：{{bookItem.bookName}}</p>
+                    <p>出版商：{{bookItem.publishe}}</p>
+                    <p>出版年：{{bookItem.publishTime}}</p>
+                    <p>页数：</p>
+                    <p>ISBN：{{bookItem.isbn}}</p>
                 </div>
                 <div class="book-rate">
                     <p>圈友评分</p>
@@ -35,30 +35,16 @@
             <h3 style="color:#007722">内容简介</h3>
             <el-divider></el-divider>
             <div class="book-content">
-                <p>这本乔布斯唯一授权的官方传记，在2011年上半年由美国出版商西蒙舒斯特对外发布出版消息以来，备受全球媒体和业界瞩目，这本书的全球出版日期最终确定为2011年11月21日，简体中文版也将同步上市。
-
-两年多的时间，与乔布斯40多次的面对面倾谈，以及与乔布斯一百多个家庭成员、 朋友、竞争对手、同事的不受限的采访，造就了这本独家传记。
-
-尽管乔布斯给予本书的采访和创作全面的配合，但他对内容从不干涉，也不要求出版前阅读全文的权利。对于任何资源和关联的人，他都不设限，甚至鼓励他所熟知的人袒露出自己的心声。
-
-“我已经做了很多并不值得自豪的事情，比如23岁时就让我的女友怀了孕，以及我对这件事的处理方式”，他说， “对我而言，没有什么不可以对外袒露的。”
-
-谈及和他共过事的人以及竞争对手，他直言不讳，甚至尖酸刻薄。他的激情、精力、欲望、完美主义、艺术修养、残暴还有对掌控权的迷恋塑造出的商业哲学一览无余。
-
-同样，他的朋友、敌人，还有同事得以为我们提供了一个前所未有的毫无掩饰的视角。
-
-他是一位极具创造力的企业家，他有如过山车般精彩的人生和犀利激越的性格，充满追求完美和誓不罢休的激情，他创造出个人电脑、动画电影、音乐、手机、平板电脑以及数字出版等6大产业的颠覆性变革。
-
-乔布斯的个性经常让周围的人愤怒和绝望，但其所创造出的产品也与这种个性息息相关，全然不可分割的，正如苹果的硬件和软件一样。
-
-他的故事既具有启发意义，又有警示意义，充满了关于创新、个性、领导力以及价值观的教益。</p>
+                <p style="text-indent:25px;">
+                    {{bookItem.bookIntroduction}}
+                </p>
             </div>
         <div class="author-info-container">
             <h3 style="color:#007722">作者简介</h3>
             <el-divider></el-divider>
             <div class="author-info">
-                <p>
-                    作者：沃尔特·艾萨克森历任美国有线电视新闻网（CNN）董事长和《时代周刊》总编，他的作品包括畅销书《爱因斯坦传》，《本杰明·富兰克林传》以及《基辛格传》
+                <p style="text-indent:25px;">
+                    {{bookItem.authorIntroduction}}
                 </p>
             </div>
         </div>
@@ -145,6 +131,7 @@ export default {
   data () {
     return {
       bid: '',
+      bookItem: '',
       bookRate: 3.7,
       dyAvatar: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
       commentsShow: false
@@ -158,14 +145,30 @@ export default {
     openbook (bid) {
       console.log(bid)
     },
+
+    getBookDetail (bid) {
+      var _this = this
+      this.$axios.get('book/' + this.bid)
+        .then(response => {
+          console.log(response.data)
+          _this.bookItem = response.data
+          console.log('测试获取' + _this.bookItem)
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+    },
+
     showComments () {
       this.commentsShow = !this.commentsShow
     }
   },
 
   mounted () {
+    // 获取书籍信息
     this.bid = this.$route.params.bid
     console.log('当前书籍' + this.bid)
+    this.getBookDetail(this.bid)
   }
 }
 </script>
