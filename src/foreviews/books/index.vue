@@ -6,9 +6,22 @@
       <h2>图书资讯</h2>
     </div>
     <el-divider ></el-divider>
-    <el-carousel class="books-carousel" indicator-position="outside">
-      <el-carousel-item class="books-carousel-item" v-for="item in 4" :key="item">
-        <h3>{{ item }}</h3>
+    <el-carousel class="books-carousel" indicator-position="outside" :interval= 5000 >
+      <el-carousel-item class="books-carousel-item"  v-for="(item,i) in bookCarouselList" :key="i">
+        <div class="books-carousel-hd">
+          <img :src='item.illustration' style="width: 115px; height: 172px" >
+        </div>
+        <div class="books-carousel-bd">
+          <p style="font-size:20px">{{item.title}}</p>
+          <div class="books-carousel-meta">
+            <div class="books-carousel-user">
+                <p>{{item.author}}</p>
+            </div>
+            <div class="books-carousel-content">
+              <p>{{item.content}}</p>
+            </div>
+          </div>
+        </div>
       </el-carousel-item>
     </el-carousel>
 
@@ -86,6 +99,8 @@ export default {
       url: require('../../assets/books/baiyexing.jpg'),
       valueRate: 2.7,
       homeBookList: [
+      ],
+      bookCarouselList: [
       ]
     }
   },
@@ -93,6 +108,22 @@ export default {
 
   },
   methods: {
+    // 书籍咨询信息
+    getBookCarousel () {
+      var _this = this
+      this.$axios.get('carousel/book')
+        .then(response => {
+          console.log(response.data)
+          console.log('测试获取' + _this.homeBookList.length)
+          _this.bookCarouselList = response.data
+          console.log('测试获取' + _this.homeBookList)
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+    },
+
+    // 展示最新书籍信息
     getHomeBooks () {
       var _this = this
       this.$axios.get('book/list/latest')
@@ -114,17 +145,8 @@ export default {
   },
 
   mounted () {
-    var _this = this
-    this.$axios.get('book/list/latest')
-      .then(response => {
-        console.log(response.data)
-        console.log('测试获取' + _this.homeBookList.length)
-        _this.homeBookList = response.data
-        console.log('测试获取' + _this.homeBookList)
-      })
-      .catch(function (error) {
-        console.log(error)
-      })
+    this.getBookCarousel()
+    this.getHomeBooks()
   },
 
   filters: {
@@ -184,21 +206,35 @@ export default {
   }
 
  /*轮播图样式*/
+   .books-carousel-hd{
+    margin-left: 50px;
+    margin-right: 50px;
+    margin-top: 50px;
+    float: right;
+  }
+  .books-carousel-bd{
+    margin-left: 50px;
+    margin-right: 50px;
+    margin-top: 50px;
+  }
+
   .books-carousel-item h3 {
     color: #475669;
     font-size: 18px;
     opacity: 0.75;
     line-height: 300px;
     margin: 0;
-    text-align: center
+    text-align: center;
   }
 
   .books-carousel-item:nth-child(2n) {
-    background-color: #99a9bf;
+    border: solid 1px #ddd;
+    border-radius: 2px;
   }
 
   .books-carousel-item:nth-child(2n+1) {
-    background-color: #d3dce6;
+    border: solid 1px #ddd;
+    border-radius: 2px;
   }
   .books-hot-review{
     margin-left: 6%;
