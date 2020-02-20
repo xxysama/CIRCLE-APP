@@ -7,7 +7,7 @@
             </div>
             <div class="book-info-container" :v-model="bookItem">
                 <div class="book-img">
-                    <el-image :src="bookItem.imgSrc" style="width: 135px; height: 200px" ></el-image>
+                    <img :src='bookItem.imgSrc' style="width: 135px; height: 200px" >
                 </div>
                 <div class="book-info">
                     <p>作者：{{bookItem.author}}</p>
@@ -52,11 +52,11 @@
         <div class="same-author-books">
             <h3 style="color:#007722">同作者书籍</h3>
             <el-divider></el-divider>
-            <el-col :span="4" v-for="item in 5" :key="item">
+            <el-col :span="4" v-for="(item,i) in randBookList" :key="i">
                 <el-card :body-style="{ padding: '0px' }" shadow="hover" @click.native="openbook(item)">
-                    <img src='../../assets/books/baiyexing.jpg' class="img">
+                    <img :src='item.imgSrc' style="height: 200px;width: 135px;">
                     <div style="padding: 8px;">
-                    <el-link :underline="false" href="#">{{item}}</el-link>
+                    <el-link :underline="false" href="#">{{item.bookName}}</el-link>
                     </div>
                 </el-card>
             </el-col>
@@ -128,10 +128,12 @@
 
 <script>
 export default {
+  inject: ['routerRefresh'], // 在子组件中注入在父组件中出创建的属性
   data () {
     return {
       bid: '',
       bookItem: '',
+      randBookList: [],
       bookRate: 3.7,
       dyAvatar: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
       commentsShow: false
@@ -142,8 +144,9 @@ export default {
   },
 
   methods: {
-    openbook (bid) {
-      console.log(bid)
+    openbook (item) {
+      this.$router.push({ path: '/books/' + item.bookId })
+      this.routerRefresh()
     },
 
     getBookDetail (bid) {
@@ -152,6 +155,19 @@ export default {
         .then(response => {
           console.log(response.data)
           _this.bookItem = response.data
+          console.log('测试获取' + _this.bookItem)
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+    },
+
+    getRandBookds (bid) {
+      var _this = this
+      this.$axios.get('book/rand5/' + this.bid)
+        .then(response => {
+          console.log(response.data)
+          _this.randBookList = response.data
           console.log('测试获取' + _this.bookItem)
         })
         .catch(function (error) {
@@ -169,6 +185,7 @@ export default {
     this.bid = this.$route.params.bid
     console.log('当前书籍' + this.bid)
     this.getBookDetail(this.bid)
+    this.getRandBookds(this.bid)
   }
 }
 </script>
@@ -177,9 +194,6 @@ export default {
   .bottom {
     margin-top: 8px;
     line-height: 12px;
-  }
-  .img{
-    width: 100%;
   }
   .button {
     padding: 0;

@@ -39,7 +39,7 @@
 
    <el-main>
       <transition name="fade-rv" mode="out-in">
-          <router-view></router-view>
+          <router-view v-if="routerAlive"></router-view>
       </transition>
    </el-main>
 
@@ -126,12 +126,19 @@ export default {
       path: '',
       activeName: 'books',
       SearchInput: '',
-      logo: require('../assets/logo.png')
+      logo: require('../assets/logo.png'),
+      routerAlive: true
     }
   },
 
   components: {
 
+  },
+
+  provide () { // 在父组件中创建属性
+    return {
+      routerRefresh: this.routerRefresh
+    }
   },
 
   methods: {
@@ -183,6 +190,13 @@ export default {
     showLoginDialog () {
       // this.loginVisible = true
       this.$router.push({ path: '/' + 'toLogin' })
+    },
+
+    routerRefresh () {
+      this.routerAlive = false
+      this.$nextTick(() => {
+        this.routerAlive = true
+      })
     }
 
   },

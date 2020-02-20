@@ -7,7 +7,7 @@
     </div>
     <el-divider ></el-divider>
     <el-carousel class="books-carousel" indicator-position="outside" :interval= 5000 >
-      <el-carousel-item class="books-carousel-item"  v-for="(item,i) in bookCarouselList" :key="i">
+      <el-carousel-item class="books-carousel-item"  v-for="(item,i) in bookCarouselList" :key="i" @click.native="openCarousel(item)">
         <div class="books-carousel-hd">
           <img :src='item.illustration' style="width: 115px; height: 172px" >
         </div>
@@ -28,7 +28,7 @@
     <h3>热门书籍</h3>
     <el-divider></el-divider>
     <el-col :span="4" v-for="(item,i) in homeBookList" :key="i">
-      <el-card :body-style="{ padding: '0px' }" shadow="hover" @click.native="openbook(item)">
+      <el-card class="book-card" :body-style="{ padding: '0px' }" shadow="hover" @click.native="openbook(item)">
         <img :src='item.imgSrc' class="img-book">
         <div class="book-bottom">
           <el-link :underline="false" href="#">{{item.bookName | ellipsis}}</el-link>
@@ -138,9 +138,15 @@ export default {
         })
     },
 
+    // 点击书籍跳转
     openbook (item) {
       console.log('跳转前传 ' + item.bookid)
       this.$router.push({ path: '/books/' + item.bookId })
+    },
+
+    // 点击走马灯跳转
+    openCarousel (item) {
+      alert('111')
     }
   },
 
@@ -188,7 +194,14 @@ export default {
 </style>
 
 <style scoped>
+
+  .book-card {
+    cursor: pointer;
+    background-color: #fcfcfc
+  }
   .img-book{
+    padding-left: 10px;
+    padding-top: 5px;
     width: 115px;
     height: 172px;
   }
@@ -218,6 +231,9 @@ export default {
     margin-top: 50px;
   }
 
+  .books-carousel-item {
+    background-color: #fcfcfc
+    }
   .books-carousel-item h3 {
     color: #475669;
     font-size: 18px;
