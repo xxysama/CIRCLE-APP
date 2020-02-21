@@ -7,18 +7,18 @@
     </div>
     <el-divider ></el-divider>
     <el-carousel class="books-carousel" indicator-position="outside" :interval= 5000 >
-      <el-carousel-item class="books-carousel-item"  v-for="(item,i) in bookCarouselList" :key="i" @click.native="openCarousel(item)">
+      <el-carousel-item class="books-carousel-item"  v-for="carousel in bookCarouselList" :key="carousel.title" @click.native="openCarousel(carousel)">
         <div class="books-carousel-hd">
-          <img :src='item.illustration' style="width: 115px; height: 172px" >
+          <img :src='carousel.illustration' style="width: 115px; height: 172px" >
         </div>
         <div class="books-carousel-bd">
-          <p style="font-size:20px">{{item.title}}</p>
+          <p style="font-size:20px">{{carousel.title}}</p>
           <div class="books-carousel-meta">
             <div class="books-carousel-user">
-                <p>{{item.author}}</p>
+                <p>{{carousel.author}}</p>
             </div>
             <div class="books-carousel-content">
-              <p>{{item.content}}</p>
+              <p>{{carousel.content}}</p>
             </div>
           </div>
         </div>
@@ -27,13 +27,13 @@
 
     <h3>热门书籍</h3>
     <el-divider></el-divider>
-    <el-col :span="4" v-for="(item,i) in homeBookList" :key="i">
-      <el-card class="book-card" :body-style="{ padding: '0px' }" shadow="hover" @click.native="openbook(item)">
-        <img :src='item.imgSrc' class="img-book">
+    <el-col :span="4" v-for="book in homeBookList" :key="book.bookName">
+      <el-card class="book-card" :body-style="{ padding: '0px' }" shadow="hover" @click.native="openbook(book)">
+        <img :src='book.imgSrc' class="img-book">
         <div class="book-bottom">
-          <el-link :underline="false" href="#">{{item.bookName | ellipsis}}</el-link>
+          <el-link :underline="false" href="#">{{book.bookName | ellipsis}}</el-link>
           <div class="book-author">
-            {{ item.author }}
+            {{ book.author }}
           </div>
         </div>
     </el-card>
@@ -43,14 +43,19 @@
     <div class="book-aside">
     <h3>热门标签</h3>
     <div class="book-tag-container">
-      <el-tag><a class="tag-link" href="#">标签一</a></el-tag>
-      <el-tag type="success"><a class="tag-link" href="#">标签二</a></el-tag>
-      <el-tag type="info"><a class="tag-link" href="#">标签三</a></el-tag>
-      <el-tag type="warning"><a class="tag-link" href="#">标签四</a></el-tag>
-      <el-tag type="danger"><a class="tag-link" href="#">标签五</a></el-tag>
-      <el-tag type=""><a class="tag-link" href="#">标签六</a></el-tag>
-      <el-tag type="success"><a class="tag-link" href="#">标签七</a></el-tag>
-      <el-tag type="info"><a class="tag-link" href="#">标签八</a></el-tag>
+      <div v-for="(tag,index) in tags" :key="index" >
+        <el-tag
+          :type="tag.tblTagInfo.tagType"
+          effect="dark">
+          {{ tag.tblTagInfo.tagName }}
+        </el-tag>
+        <div class="tag-item">
+          <el-tag v-for="temp in tag.tagItemList" :key="temp.tagItemName">
+              {{ temp.tagItemName}}
+          </el-tag>
+        </div>
+      </div>
+
     </div>
     <h3>一周热读</h3>
     <div v-for="item in 10" :key="item">
@@ -98,10 +103,10 @@ export default {
     return {
       url: require('../../assets/books/baiyexing.jpg'),
       valueRate: 2.7,
-      homeBookList: [
-      ],
-      bookCarouselList: [
-      ]
+      homeBookList: [],
+      bookCarouselList: [],
+      tags: [],
+      tagItem: []
     }
   },
   components: {
@@ -114,9 +119,20 @@ export default {
       this.$axios.get('carousel/book')
         .then(response => {
           console.log(response.data)
-          console.log('测试获取' + _this.homeBookList.length)
           _this.bookCarouselList = response.data
-          console.log('测试获取' + _this.homeBookList)
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+    },
+
+    // 获取Tag信息
+    getTagInfo () {
+      var _this = this
+      this.$axios.get('tag/book/list')
+        .then(response => {
+          // console.log('tag信息' + JSON.stringify(response.data))
+          _this.tags = response.data
         })
         .catch(function (error) {
           console.log(error)
@@ -129,9 +145,7 @@ export default {
       this.$axios.get('book/list/latest')
         .then(response => {
           console.log(response.data)
-          console.log('测试获取' + _this.homeBookList.length)
           _this.homeBookList = response.data
-          console.log('测试获取' + _this.homeBookList)
         })
         .catch(function (error) {
           console.log(error)
@@ -140,8 +154,8 @@ export default {
 
     // 点击书籍跳转
     openbook (item) {
-      console.log('跳转前传 ' + item.bookid)
-      this.$router.push({ path: '/books/' + item.bookId })
+      console.log('跳转前传 ' + item.id)
+      this.$router.push({ path: '/books/' + item.id })
     },
 
     // 点击走马灯跳转
@@ -152,6 +166,7 @@ export default {
 
   mounted () {
     this.getBookCarousel()
+    this.getTagInfo()
     this.getHomeBooks()
   },
 
@@ -291,5 +306,10 @@ export default {
   }
   .book-tag-container{
     margin-bottom: 50px;
+    cursor: pointer;
+  }
+
+  .tag-item {
+    margin-left: 0px
   }
 </style>

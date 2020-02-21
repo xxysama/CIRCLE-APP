@@ -145,7 +145,7 @@ export default {
 
   methods: {
     openbook (item) {
-      this.$router.push({ path: '/books/' + item.bookId })
+      this.$router.push({ path: '/books/' + item.id })
       this.routerRefresh()
     },
 
