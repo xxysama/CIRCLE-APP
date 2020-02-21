@@ -28,6 +28,14 @@
     <h3>热门书籍</h3>
     <el-divider></el-divider>
     <el-col :span="4" v-for="book in homeBookList" :key="book.bookName">
+    <el-tooltip class="item" effect="dark" content="Right Center 提示文字" placement="right">
+      <p slot="content" style="font-size: 14px;margin-bottom: 6px;">{{book.bookName}}</p>
+      <p slot="content" style="font-size: 13px;margin-bottom: 6px">
+        <span>{{book.author}}</span> /
+        <span>{{book.publishTime}}</span> /
+        <span>{{book.publisher}}</span>
+      </p>
+      <p slot="content" style="width: 300px" class="abstract">{{book.bookIntroduction}}</p>
       <el-card class="book-card" :body-style="{ padding: '0px' }" shadow="hover" @click.native="openbook(book)">
         <img :src='book.imgSrc' class="img-book">
         <div class="book-bottom">
@@ -37,6 +45,7 @@
           </div>
         </div>
     </el-card>
+    </el-tooltip>
   </el-col>
   </el-main>
   <el-aside width="25%">
@@ -46,7 +55,7 @@
       <div v-for="(tag,index) in tags" :key="index" >
         <el-tag
           :type="tag.tblTagInfo.tagType"
-          effect="dark">
+          effect="dark" @click="openTag(tag.tblTagInfo.tagName)">
           {{ tag.tblTagInfo.tagName }}
         </el-tag>
         <div class="tag-item">
@@ -58,9 +67,9 @@
 
     </div>
     <h3>一周热读</h3>
-    <div v-for="item in 10" :key="item">
+    <div class="week-hot-book" v-for="item in 10" :key="item">
         <el-link :underline='false'>{{item}}</el-link>
-        <el-divider></el-divider>
+        <el-divider class="week-hot-divider"></el-divider>
     </div>
 
     </div>
@@ -158,6 +167,10 @@ export default {
       this.$router.push({ path: '/books/' + item.id })
     },
 
+    openTag (tagName) {
+      this.$router.push({ path: '/tags/' + tagName })
+    },
+
     // 点击走马灯跳转
     openCarousel (item) {
       alert('111')
@@ -188,7 +201,7 @@ export default {
 <style>
 
   .el-container {
-    margin-left: 5%
+    margin-left: 5%;
   }
   .el-card{
     margin-top: 20px
@@ -311,5 +324,13 @@ export default {
 
   .tag-item {
     margin-left: 0px
+  }
+  .week-hot-divider {
+     margin: 8px 0;
+     background: 0 0;
+     border-top: 1px dashed #e8eaec;
+  }
+  .week-hot-book {
+    background-color: #f5f5f5
   }
 </style>

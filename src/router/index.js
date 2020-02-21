@@ -44,6 +44,18 @@ const routes = [
   },
 
   {
+    path: '/tags/:tag',
+    component: ForeLayout,
+    children: [{
+      path: '',
+      component: () => import('@/foreviews/tagdetails/index'),
+      meta: {
+        requireAuth: true
+      }
+    }]
+  },
+
+  {
     path: '/movies',
     component: ForeLayout,
     children: [{
