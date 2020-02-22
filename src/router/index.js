@@ -44,7 +44,7 @@ const routes = [
   },
 
   {
-    path: '/tags/:tag',
+    path: '/tags/:tid',
     component: ForeLayout,
     children: [{
       path: '',

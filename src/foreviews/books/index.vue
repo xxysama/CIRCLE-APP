@@ -28,25 +28,25 @@
     <h3>热门书籍</h3>
     <el-divider></el-divider>
     <el-col :span="4" v-for="book in homeBookList" :key="book.bookName">
-    <el-tooltip class="item" effect="dark" content="Right Center 提示文字" placement="right">
-      <p slot="content" style="font-size: 14px;margin-bottom: 6px;">{{book.bookName}}</p>
-      <p slot="content" style="font-size: 13px;margin-bottom: 6px">
-        <span>{{book.author}}</span> /
-        <span>{{book.publishTime}}</span> /
-        <span>{{book.publisher}}</span>
-      </p>
-      <p slot="content" style="width: 300px" class="abstract">{{book.bookIntroduction}}</p>
-      <el-card class="book-card" :body-style="{ padding: '0px' }" shadow="hover" @click.native="openbook(book)">
-        <img :src='book.imgSrc' class="img-book">
-        <div class="book-bottom">
-          <el-link :underline="false" href="#">{{book.bookName | ellipsis}}</el-link>
-          <div class="book-author">
-            {{ book.author }}
+      <el-tooltip class="item" effect="dark" content="Right Center 提示文字" placement="right">
+        <p slot="content" style="font-size: 14px;margin-bottom: 6px;">{{book.bookName}}</p>
+        <p slot="content" style="font-size: 13px;margin-bottom: 6px">
+          <span>{{book.author}}</span> /
+          <span>{{book.publishTime}}</span> /
+          <span>{{book.publisher}}</span>
+        </p>
+        <p slot="content" style="width: 300px" class="abstract">{{book.bookIntroduction}}</p>
+        <el-card class="book-card" :body-style="{ padding: '0px' }" shadow="hover" @click.native="openbook(book)">
+          <img :src='book.imgSrc' class="img-book">
+          <div class="book-bottom">
+            <el-link :underline="false" href="#">{{book.bookName | ellipsis}}</el-link>
+            <div class="book-author">
+              {{ book.author }}
+            </div>
           </div>
-        </div>
-    </el-card>
-    </el-tooltip>
-  </el-col>
+        </el-card>
+      </el-tooltip>
+     </el-col>
   </el-main>
   <el-aside width="25%">
     <div class="book-aside">
@@ -55,7 +55,7 @@
       <div v-for="(tag,index) in tags" :key="index" >
         <el-tag
           :type="tag.tblTagInfo.tagType"
-          effect="dark" @click="openTag(tag.tblTagInfo.tagName)">
+          effect="dark" @click="openTag(tag.tblTagInfo.id)">
           {{ tag.tblTagInfo.tagName }}
         </el-tag>
         <div class="tag-item">
@@ -167,8 +167,8 @@ export default {
       this.$router.push({ path: '/books/' + item.id })
     },
 
-    openTag (tagName) {
-      this.$router.push({ path: '/tags/' + tagName })
+    openTag (tid) {
+      this.$router.push({ path: '/tags/' + tid })
     },
 
     // 点击走马灯跳转
