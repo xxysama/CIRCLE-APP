@@ -38,8 +38,9 @@
   </el-header>
 
    <el-main>
+
       <transition name="fade-rv" mode="out-in">
-          <router-view v-if="routerAlive"></router-view>
+            <router-view v-if="routerAlive"></router-view>
       </transition>
    </el-main>
 
@@ -68,12 +69,21 @@
 <style>
 
   .fade-rv-enter-active, .fade-rv-leave-active {
-  transition: opacity .5s;
-}
+    transition: opacity .5s;
+  }
   .fade-rv-enter, .fade-rv-leave-to  {
-  opacity: 0;
-}
+    opacity: 0;
+  }
 
+  ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+  }
+  /*滚动条样式*/
+  ::-webkit-scrollbar-thumb {
+      background-color: rgb(199, 198, 198);
+      border-radius: 3px;
+  }
 </style>
 <style scoped>
   .row-bg {

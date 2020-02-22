@@ -48,7 +48,7 @@
           style="width: 400px;margin-right: 10px"
           v-model="keywords">
         </el-input>
-        <el-button size="small" type="primary" icon="el-icon-search" @click="searchClick">搜索</el-button>
+        <el-button size="small" type="primary" icon="el-icon-search" @click="searchClick" >搜索</el-button>
       </div>
 
       <div class="book-container">
@@ -61,11 +61,11 @@
               <span>{{book.publisher}}</span>
             </p>
             <p slot="content" style="width: 300px" class="abstract">{{book.bookIntroduction}}</p>
-            <el-card class="book-card" :body-style="{ padding: '0px' }" shadow="hover" @click.native="openbook(book)">
-              <img :src='book.imgSrc' class="img-book">
-              <div class="book-bottom">
+            <el-card class="tag-book-card" :body-style="{ padding: '0px' }" shadow="hover" @click.native="openbook(book)">
+              <img :src='book.imgSrc' class="tag-img-book">
+              <div class="tag-book-bottom">
                 <el-link :underline="false" href="#">{{book.bookName | ellipsis}}</el-link>
-                <div class="book-author">
+                <div class="tag-book-author">
                   {{ book.author }}
                 </div>
               </div>
@@ -75,12 +75,13 @@
       </div>
       <div class="book-pagination">
         <el-pagination
+          background
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           :current-page.sync="currentPage3"
-          :page-size="100"
+          :page-size="12"
           layout="prev, pager, next, jumper"
-          :total="1000">
+          :total="100">
         </el-pagination>
       </div>
     </el-main>
@@ -121,6 +122,15 @@ export default {
 
     // 搜索书籍
     searchClick () {
+      const loading = this.$loading({
+        lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      })
+      setTimeout(() => {
+        loading.close()
+      }, 2000)
     },
 
     // 处理页码大小
@@ -184,25 +194,25 @@ export default {
     margin-bottom: 20px;
   }
 
-  .book-card {
+  .tag-book-card {
     cursor: pointer;
     background-color: #fcfcfc
   }
 
-  .img-book{
+  .tag-img-book{
     padding-left: 10px;
     padding-top: 5px;
     width: 115px;
     height: 172px;
   }
 
-  .book-author {
+  .tag-book-author {
     margin-top: 8px;
     line-height: 10px;
     font-size: 13px;
   }
 
-  .book-bottom {
+  .tag-book-bottom {
     padding-left: 8px;
     padding-top: 0px;
     padding-bottom: 10px;
