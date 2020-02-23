@@ -1,6 +1,6 @@
 <template>
  <div>
-    <el-col :span="4" v-for="book in homeBookList" :key="book.bookName">
+    <el-col :span="4" v-for="book in bookList" :key="book.bookName">
       <el-tooltip class="item" effect="dark" content="Right Center 提示文字" placement="right">
         <p slot="content" style="font-size: 14px;margin-bottom: 6px;">{{book.bookName}}</p>
         <p slot="content" style="font-size: 13px;margin-bottom: 6px">
@@ -27,10 +27,29 @@
 export default {
   data () {
     return {
-
+      bookList: []
     }
   },
   components: {
+  },
+  methods: {
+
+    // 初始加载书籍
+    loadBookList () {
+      var _this = this
+      this.$axios.get('book/list/latest')
+        .then(response => {
+          console.log(response.data)
+          _this.bookList = response.data
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+    }
+  },
+
+  mounted () {
+    this.loadBookList()
   }
 }
 </script>

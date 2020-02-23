@@ -90,6 +90,7 @@
 </template>
 
 <script>
+
 export default {
   inject: ['routerRefresh'], // 在子组件中注入在父组件中出创建的属性
   data () {
@@ -120,17 +121,34 @@ export default {
         })
     },
 
+    // 跳转书籍详情页
+
+    openbook (item) {
+      this.$router.push({ path: '/books/' + item.id })
+    },
     // 搜索书籍
     searchClick () {
-      const loading = this.$loading({
-        lock: true,
-        text: 'Loading',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.7)'
-      })
-      setTimeout(() => {
-        loading.close()
-      }, 2000)
+      // const loading = this.$loading({
+      //   lock: true,
+      //   text: 'Loading',
+      //   spinner: 'el-icon-loading',
+      //   background: 'rgba(0, 0, 0, 0.7)'
+      // })
+      // setTimeout(() => {
+      //   loading.close()
+      // }, 2000)
+      console.log(this.keywords)
+      if (this.keywords !== '') {
+        var _this = this
+        this.$axios.get('book/search/' + this.keywords)
+          .then(response => {
+            console.log(response.data)
+            _this.bookList = response.data
+          })
+          .catch(function (error) {
+            console.log(error)
+          })
+      }
     },
 
     // 处理页码大小
