@@ -66,7 +66,7 @@
               <div class="tag-book-bottom">
                 <el-link :underline="false" href="#">{{book.bookName | ellipsis}}</el-link>
                 <div class="tag-book-author">
-                  {{ book.author }}
+                  {{ book.author | ellipsis }}
                 </div>
               </div>
           </el-card>
@@ -78,10 +78,10 @@
           background
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
-          :current-page.sync="currentPage3"
+          :current-page.sync="currentPage"
           :page-size="12"
-          layout="prev, pager, next, jumper"
-          :total="100">
+          layout="total, prev, pager, next, jumper"
+          :total= total>
         </el-pagination>
       </div>
     </el-main>
@@ -97,7 +97,9 @@ export default {
     return {
       keywords: '',
       menuactive: '0',
-      bookList: []
+      bookList: [],
+      currentPage: 1,
+      total: 0
     }
   },
   components: {
@@ -110,11 +112,18 @@ export default {
 
     // 初始加载书籍
     loadBookList () {
+      this.loadBookByPage(1)
+    },
+
+    // 分页跳转
+    loadBookByPage (page) {
       var _this = this
-      this.$axios.get('book/list/latest')
+      this.$axios.get('book/page/' + page)
         .then(response => {
           console.log(response.data)
-          _this.bookList = response.data
+          _this.bookList = response.data.records
+          _this.total = response.data.total
+          _this.currentPage = response.data.current
         })
         .catch(function (error) {
           console.log(error)
@@ -124,7 +133,7 @@ export default {
     // 跳转书籍详情页
 
     openbook (item) {
-      this.$router.push({ path: '/books/' + item.id })
+      this.$router.push({ path: '/books/' + item.bookId })
     },
     // 搜索书籍
     searchClick () {
@@ -158,7 +167,7 @@ export default {
 
     // 当前页变动时候触发
     handleCurrentChange () {
-
+      this.loadBookByPage(this.currentPage)
     }
   },
   mounted () {

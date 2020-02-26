@@ -12,9 +12,9 @@
                 <div class="book-info">
                     <p>作者：{{bookItem.author}}</p>
                     <p>原作名：{{bookItem.bookName}}</p>
-                    <p>出版商：{{bookItem.publishe}}</p>
+                    <p>出版商：{{bookItem.publisher}}</p>
                     <p>出版年：{{bookItem.publishTime}}</p>
-                    <p>页数：</p>
+                    <!-- <p>页数：</p> -->
                     <p>ISBN：{{bookItem.isbn}}</p>
                 </div>
                 <div class="book-rate">

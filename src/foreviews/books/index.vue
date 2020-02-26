@@ -41,7 +41,7 @@
           <div class="book-bottom">
             <el-link :underline="false" href="#">{{book.bookName | ellipsis}}</el-link>
             <div class="book-author">
-              {{ book.author }}
+              {{ book.author | ellipsis}}
             </div>
           </div>
         </el-card>
@@ -163,8 +163,8 @@ export default {
 
     // 点击书籍跳转
     openbook (item) {
-      console.log('跳转前传 ' + item.id)
-      this.$router.push({ path: '/books/' + item.id })
+      console.log('跳转前传 ' + item.bookId)
+      this.$router.push({ path: '/books/' + item.bookId })
     },
 
     openTag (tid) {
