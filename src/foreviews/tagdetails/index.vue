@@ -107,6 +107,7 @@ export default {
   methods: {
     // 侧边栏菜单点击
     handleSelect (key) {
+      this.menuactive = key
       if (key === '0') {
         this.loadBookByPage(1)
       } else {
@@ -182,7 +183,11 @@ export default {
 
     // 当前页变动时候触发
     handleCurrentChange () {
-      this.loadBookByPage(this.currentPage)
+      if (this.menuactive === '0') {
+        this.loadBookByPage(this.currentPage)
+      } else {
+        this.loadTagBookByPage(this.menuactive, this.currentPage)
+      }
     }
   },
   mounted () {
@@ -262,7 +267,7 @@ export default {
 
   .book-pagination {
     position: absolute;
-    margin-top: 600px;
-    margin-left: 10%;
+    margin-top: 560px;
+    margin-left: 15%;
   }
 </style>
