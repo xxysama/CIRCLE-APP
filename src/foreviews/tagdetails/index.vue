@@ -106,19 +106,34 @@ export default {
   },
   methods: {
     // 侧边栏菜单点击
-    handleSelect () {
-      alert(this.menuactive)
+    handleSelect (key) {
+      if (key === '0') {
+        this.loadBookByPage(1)
+      } else {
+        // 默认第一页开始
+        this.loadTagBookByPage(key, 1)
+      }
     },
 
-    // 初始加载书籍
-    loadBookList () {
-      this.loadBookByPage(1)
-    },
-
-    // 分页跳转
+    // 全部展示分页跳转
     loadBookByPage (page) {
       var _this = this
       this.$axios.get('book/page/' + page)
+        .then(response => {
+          console.log(response.data)
+          _this.bookList = response.data.records
+          _this.total = response.data.total
+          _this.currentPage = response.data.current
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+    },
+
+    // 各自标签分页展示
+    loadTagBookByPage (tid, page) {
+      var _this = this
+      this.$axios.get('book/tag/' + tid + '/' + page)
         .then(response => {
           console.log(response.data)
           _this.bookList = response.data.records
@@ -172,7 +187,7 @@ export default {
   },
   mounted () {
     this.menuactive = this.$route.params.tid
-    this.loadBookList()
+    this.handleSelect(this.menuactive)
   },
 
   filters: {
@@ -227,7 +242,7 @@ export default {
   }
 
   .tag-img-book{
-    padding-left: 10px;
+    padding-left: 11px;
     padding-top: 5px;
     width: 115px;
     height: 172px;
