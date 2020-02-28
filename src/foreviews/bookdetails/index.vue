@@ -3,7 +3,7 @@
     <el-container>
         <el-main>
             <div>
-            <h2>图书名称</h2>
+              <h2>图书名称</h2>
             </div>
             <div class="book-info-container" :v-model="bookItem">
                 <div class="book-img">
@@ -31,7 +31,21 @@
                         <el-progress class="book-rate-progress" color="#ffd596" :text-inside="true" :stroke-width="14" :percentage="60.5"></el-progress>
                     </div>
                 </div>
+                <div class="my-rate">
+                  <h5>我的评分：</h5>
+                  <el-rate
+                    v-model="myRate"
+                    show-text>
+                  </el-rate>
+                </div>
             </div>
+
+            <div class="book-opertation">
+              <span><el-link :underline = "false" icon="el-icon-edit">写书评</el-link></span>
+              <span style="margin-left:50px;margin-right:50px"><el-link :underline = "false" icon="el-icon-star-on">加入收藏夹</el-link></span>
+              <span><el-link :underline = "false" icon="el-icon-share">分享</el-link></span>
+            </div>
+
             <h3 style="color:#007722">内容简介</h3>
             <el-divider></el-divider>
             <div class="book-content">
@@ -136,7 +150,8 @@ export default {
       randBookList: [],
       bookRate: 3.7,
       dyAvatar: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
-      commentsShow: false
+      commentsShow: false,
+      myRate: null
 
     }
   },
@@ -234,7 +249,7 @@ export default {
     }
     .book-info-container{
         clear: both;
-        height: 300px;
+        height: 250px;
     }
     .book-info{
         float: left;
@@ -257,6 +272,19 @@ export default {
     .book-rate /deep/ .el-progress-bar{
         width: 80%
     }
+
+    .book-opertation{
+        margin-left: 65%;
+        height: 40px;
+        padding-top: 10px;
+    }
+
+    .my-rate{
+        float: right;
+        width: 150px;
+        margin-right: 8%;
+    }
+
     .book-content{
         margin-bottom: 40px
     }
