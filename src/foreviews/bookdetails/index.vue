@@ -81,25 +81,27 @@
         <div class="book-comments">
             <h3 style="color:#007722">短评</h3>
             <el-divider></el-divider>
-            <div class="book-comments" v-for="i in 4" :key="i">
+            <div class="book-comments" v-for="(comment, i) in commentsList" :key="i">
             <div class="book-comments-hd">
                 <span><el-avatar shape="square" :size="60" :src="dyAvatar"></el-avatar></span>
             </div>
             <div class="book-comments-bd">
-                <el-link :underline="false" style="font-size:20px">用户名称</el-link>
+                <el-link :underline="false" style="font-size:20px">{{comment.userName}}</el-link>
                 <div class="book-comments-meta">
 
                 </div>
                 <div class="book-comments-content">
-                创作这部作品的契机，在于一次相谈甚欢的约稿。可等到头脑冷静下来，我心里叫苦不迭。这只怕是我见过最简洁的选题了，没有类型，没有梗概，没有构想，没有时间节点……有的只是“徐霞客”三个字，以及几个关于他...
+                   <p style="text-indent:25px;">
+                     {{comment.content}}
+                  </p>
                 </div>
             </div>
             <div class="book-comments-footer">
-                <time class="time">1月13日</time>
-                <el-badge :value="66" :max="99" class="comments-item" type="primary">
+                <time class="time">{{comment.commentsTime}}</time>
+                <el-badge :value="comment.replyCount" :max="99" class="comments-item" type="primary">
                 <el-button type="text" size="small" @click="showComments">评论</el-button>
                 </el-badge>
-                <el-badge :value="200" :max="9999" class="thumb-up-item">
+                <el-badge :value="comment.likeNum" :max="999" class="thumb-up-item">
                 <el-button type="text" size="small">有用</el-button>
                 </el-badge>
             </div>
@@ -181,7 +183,8 @@ export default {
       commentsShow: false,
       myRate: null,
       dialogWriteComment: false,
-      commentText: ''
+      commentText: '',
+      commentsList: ''
 
     }
   },
@@ -223,15 +226,42 @@ export default {
     // 提交短评
     submitComment () {
       var _this = this
-      this.$axios.post('book/comments/submit', {
+      this.$axios.post('comments/submit/book', {
         topicId: _this.bookItem.bookId,
-        // fromUid: _this
+        fromUid: _this.$store.state.user.userId,
         content: _this.commentText
       })
         .then(response => {
           console.log(response.data)
-          _this.randBookList = response.data
-          console.log('测试获取' + _this.bookItem)
+          if (response.data.code === '200') {
+            this.$notify({
+              title: '成功',
+              message: response.data.msg,
+              type: 'success'
+            })
+            _this.dialogWriteComment = false
+          }
+
+          // 提交失败
+          if (response.data.code === '501') {
+            this.$notify.error({
+              title: '错误',
+              message: response.data.msg
+            })
+          }
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+    },
+
+    // 加载评论
+    loadComments (bid) {
+      var _this = this
+      this.$axios.get('comments/book/' + bid)
+        .then(response => {
+          console.log(response.data)
+          _this.commentsList = response.data
         })
         .catch(function (error) {
           console.log(error)
@@ -249,6 +279,7 @@ export default {
     console.log('当前书籍' + this.bid)
     this.getBookDetail(this.bid)
     this.getRandBookds(this.bid)
+    this.loadComments(this.bid)
   }
 }
 </script>
