@@ -33,15 +33,17 @@
                 </div>
                 <div class="my-rate">
                   <h5>我的评分：</h5>
-                  <el-rate
-                    v-model="myRate"
-                    show-text>
-                  </el-rate>
+                  <span @click="dialogWriteComment = true">
+                    <el-rate
+                      v-model="myRate"
+                      show-text>
+                    </el-rate>
+                  </span>
                 </div>
             </div>
 
             <div class="book-opertation">
-              <span><el-link :underline = "false" icon="el-icon-edit">写书评</el-link></span>
+              <span><el-link :underline = "false" icon="el-icon-edit" @click="dialogWriteComment = true">写书评</el-link></span>
               <span style="margin-left:50px;margin-right:50px"><el-link :underline = "false" icon="el-icon-star-on">加入收藏夹</el-link></span>
               <span><el-link :underline = "false" icon="el-icon-share">分享</el-link></span>
             </div>
@@ -113,6 +115,32 @@
             </div>
             <el-link :underline="false"><i class="el-icon-arrow-right"></i>更多短评</el-link>
         </div>
+
+        <!--短评弹窗 -->
+        <el-dialog :close-on-click-modal= false :close-on-press-escape= false title="写短评" :visible.sync="dialogWriteComment">
+          <div style="margin-top:-30px">
+            <h2 :v-model="bookItem">{{bookItem.bookName}}</h2>
+          </div>
+          <div style="margin-bottom:20px">
+            <el-rate
+              v-model="myRate"
+              show-text>
+            </el-rate>
+          </div>
+          <h3>简评</h3>
+          <el-input
+            type="textarea"
+            :autosize="{ minRows: 2, maxRows: 4}"
+            maxlength="200"
+            placeholder="请输入内容"
+            v-model="commentText"
+            show-word-limit>
+          </el-input>
+          <div slot="footer" class="dialog-footer">
+            <el-button type="primary" @click="submitComment">保 存</el-button>
+          </div>
+        </el-dialog>
+
         </el-main>
         <el-aside width="25%">
             <div class="book-aside">
@@ -151,7 +179,9 @@ export default {
       bookRate: 3.7,
       dyAvatar: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
       commentsShow: false,
-      myRate: null
+      myRate: null,
+      dialogWriteComment: false,
+      commentText: ''
 
     }
   },
@@ -180,6 +210,24 @@ export default {
     getRandBookds (bid) {
       var _this = this
       this.$axios.get('book/rand5/' + this.bid)
+        .then(response => {
+          console.log(response.data)
+          _this.randBookList = response.data
+          console.log('测试获取' + _this.bookItem)
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+    },
+
+    // 提交短评
+    submitComment () {
+      var _this = this
+      this.$axios.post('book/comments/submit', {
+        topicId: _this.bookItem.bookId,
+        // fromUid: _this
+        content: _this.commentText
+      })
         .then(response => {
           console.log(response.data)
           _this.randBookList = response.data

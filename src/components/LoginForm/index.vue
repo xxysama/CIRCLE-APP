@@ -42,8 +42,9 @@ export default {
       registerVisible: false,
       formLabelWidth: '120px',
       loginForm: {
-        password: '',
-        username: ''
+        userId: '',
+        username: '',
+        password: ''
       },
       rules: {
         username: [
@@ -101,6 +102,7 @@ export default {
                   message: response.data.msg,
                   type: 'success'
                 })
+                _this.loginForm.userId = response.data.data
                 _this.$store.commit('login', _this.loginForm)
 
                 var path = this.$route.query.redirect
@@ -133,6 +135,21 @@ export default {
     },
     showRegisterDialog () {
       this.registerVisible = true
+    },
+
+    // 获取userId
+    getuserId () {
+      var _this = this
+      this.$axios.get('user/getId')
+        .then(response => {
+          console.log(response.data)
+          _this.bookList = response.data.records
+          _this.total = response.data.total
+          _this.currentPage = response.data.current
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
     }
   }
 }
