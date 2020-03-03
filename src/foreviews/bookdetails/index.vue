@@ -99,17 +99,20 @@
             <div class="book-comments-footer">
                 <time class="time">{{comment.commentsTime}}</time>
                 <el-badge :value="comment.replyCount" :max="99" class="comments-item" type="primary">
-                <el-button type="text" size="small" @click="showComments">评论</el-button>
+                <el-button type="text" size="small" @click="showComments(comment.cid)">评论</el-button>
                 </el-badge>
                 <el-badge :value="comment.likeNum" :max="999" class="thumb-up-item">
                 <el-button type="text" size="small">有用</el-button>
                 </el-badge>
             </div>
             <div>
-                <div class="comments-details" v-if="commentsShow">
-                    <li v-for="i in 5" :key="i">{{i}}</li>
+                <div class="comments-details" v-if="commentsReplyShow">
+                    <div v-for="(replyItem,i) in commentsReplyList" :key="i">
+                      {{replyItem.fromUserName}} 回复 {{replyItem.toUserName}} {{replyItem.replyTime}}<br />
+                      {{replyItem.content}}
+                    </div>
                     <el-input placeholder="请输入内容" class="input-with-select">
-                    <el-button slot="append" icon="el-icon-search"></el-button>
+                    <el-button slot="append" icon="el-icon-search" @click="commentsReply">回复</el-button>
                     </el-input>
                 </div>
             </div>
@@ -180,11 +183,12 @@ export default {
       randBookList: [],
       bookRate: 3.7,
       dyAvatar: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
-      commentsShow: false,
+      commentsReplyShow: false,
       myRate: null,
       dialogWriteComment: false,
       commentText: '',
-      commentsList: ''
+      commentsList: '',
+      commentsReplyList: ''
 
     }
   },
@@ -268,9 +272,32 @@ export default {
         })
     },
 
-    showComments () {
-      this.commentsShow = !this.commentsShow
+    showComments (cid) {
+      this.commentsReplyShow = !this.commentsReplyShow
+      if (this.commentsReplyShow) {
+        this.loadCommentsReply(cid)
+      }
+    },
+
+    // 回复评论
+    commentsReply () {
+
+    },
+
+    // 加载回复评论
+    loadCommentsReply (commentId) {
+      var _this = this
+      this.$axios.get('reply/' + commentId)
+        .then(response => {
+          console.log(response.data)
+          _this.commentsReplyList = response.data
+          console.log('测试获取' + _this.bookItem)
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
     }
+
   },
 
   mounted () {
