@@ -219,6 +219,13 @@ export default {
     } else {
       this.path = this.$route.path
     }
+  },
+
+  created () {
+    // 在页面加载时读取sessionStorage里的状态信息 避免刷新失效
+    if (localStorage.getItem('user')) {
+      this.$store.commit('login', JSON.parse(localStorage.getItem('user')))
+    }
   }
 }
 </script>

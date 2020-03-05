@@ -81,42 +81,41 @@
         <div class="book-comments">
             <h3 style="color:#007722">短评</h3>
             <el-divider></el-divider>
-            <div class="book-comments" v-for="(comment, i) in commentsList" :key="i">
-            <div class="book-comments-hd">
-                <span><el-avatar shape="square" :size="60" :src="dyAvatar"></el-avatar></span>
-            </div>
-            <div class="book-comments-bd">
-                <el-link :underline="false" style="font-size:20px">{{comment.userName}}</el-link>
-                <div class="book-comments-meta">
+            <div class="book-comments" v-for="(comment, index) in commentsList" :key="index">
+              <div class="book-comments-hd">
+                  <span><el-avatar shape="square" :size="60" :src="dyAvatar"></el-avatar></span>
+              </div>
+              <div class="book-comments-bd">
+                  <el-link :underline="false" style="font-size:20px">{{comment.userName}}</el-link>
+                  <div class="book-comments-meta">
 
-                </div>
-                <div class="book-comments-content">
-                   <p style="text-indent:25px;">
-                     {{comment.content}}
-                  </p>
-                </div>
-            </div>
-            <div class="book-comments-footer">
-                <time class="time">{{comment.commentsTime}}</time>
-                <el-badge :value="comment.replyCount" :max="99" class="comments-item" type="primary">
-                <el-button type="text" size="small" @click="showComments(comment.cid)">评论</el-button>
-                </el-badge>
-                <el-badge :value="comment.likeNum" :max="999" class="thumb-up-item">
-                <el-button type="text" size="small">有用</el-button>
-                </el-badge>
-            </div>
-            <div>
-                <div class="comments-details" v-if="commentsReplyShow">
-                    <div v-for="(replyItem,i) in commentsReplyList" :key="i">
-                      {{replyItem.fromUserName}} 回复 {{replyItem.toUserName}} {{replyItem.replyTime}}<br />
-                      {{replyItem.content}}
-                    </div>
-                    <el-input placeholder="请输入内容" class="input-with-select">
-                    <el-button slot="append" icon="el-icon-search" @click="commentsReply">回复</el-button>
-                    </el-input>
-                </div>
-            </div>
-            <el-divider class="dynamic-divider"></el-divider>
+                  </div>
+                  <div class="book-comments-content">
+                    <p style="text-indent:25px;">
+                      {{comment.content}}
+                    </p>
+                  </div>
+              </div>
+              <div class="book-comments-footer">
+                  <time class="time">{{comment.commentsTime}}</time>
+                  <el-badge :value="comment.replyCount" :max="99" class="comments-item" type="primary">
+                  <el-button type="text" size="small" @click="showCommentsReply(index,comment)">评论</el-button>
+                  </el-badge>
+                  <el-badge :value="comment.likeNum" :max="999" class="thumb-up-item">
+                  <el-button type="text" size="small" @click="likeComments(comment)">有用</el-button>
+                  </el-badge>
+              </div>
+              <div>
+                  <div class="comments-details" v-show="comment.isShow">
+                      <div class="commentsReply" v-for="(replyItem,i) in commentsReplyList[index]" :key="i">
+                        <p style="font-size:14px;margin-bottom:0px">{{replyItem.fromUserName}} 回复 {{replyItem.toUserName}}
+                        <time class="time">{{replyItem.replyTime}}</time></p>
+                        <br/>
+                        <p style="margin-top:-5px;text-indent:25px;">{{replyItem.content}}</p>
+                      </div>
+                  </div>
+              </div>
+              <el-divider class="dynamic-divider"></el-divider>
             </div>
             <el-link :underline="false"><i class="el-icon-arrow-right"></i>更多短评</el-link>
         </div>
@@ -183,12 +182,11 @@ export default {
       randBookList: [],
       bookRate: 3.7,
       dyAvatar: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
-      commentsReplyShow: false,
       myRate: null,
       dialogWriteComment: false,
       commentText: '',
       commentsList: '',
-      commentsReplyList: ''
+      commentsReplyList: []
 
     }
   },
@@ -259,7 +257,7 @@ export default {
         })
     },
 
-    // 加载评论
+    // 加载书籍评论
     loadComments (bid) {
       var _this = this
       this.$axios.get('comments/book/' + bid)
@@ -272,10 +270,18 @@ export default {
         })
     },
 
-    showComments (cid) {
-      this.commentsReplyShow = !this.commentsReplyShow
-      if (this.commentsReplyShow) {
-        this.loadCommentsReply(cid)
+    showCommentsReply (index, comment) {
+      // this.$set(comment, 'replyItem', this.commentsReplyList)
+      // this.commentsReplyList = []
+      this.loadCommentsReply(index, comment.cid)
+      if (!comment.isShow) {
+        this.$set(comment, 'isShow', false)
+        comment.isShow = !comment.isShow
+      } else {
+        comment.isShow = !comment.isShow
+      }
+
+      if (comment.isShow) {
       }
     },
 
@@ -285,13 +291,31 @@ export default {
     },
 
     // 加载回复评论
-    loadCommentsReply (commentId) {
+    loadCommentsReply (index, commentId) {
       var _this = this
       this.$axios.get('reply/' + commentId)
         .then(response => {
           console.log(response.data)
-          _this.commentsReplyList = response.data
-          console.log('测试获取' + _this.bookItem)
+          _this.commentsReplyList[index] = response.data
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+    },
+
+    // 点赞
+    likeComments (comment) {
+      // 通知后端更改
+      var _this = this
+      this.$axios.put('like/bookComment', {
+        uid: _this.$store.state.user.userId,
+        likeId: comment.cid
+      })
+        .then(response => {
+          console.log(response.data)
+          // 同步前端点赞数量
+          var flag = response.data.data
+          comment.likeNum = flag ? comment.likeNum + 1 : comment.likeNum - 1
         })
         .catch(function (error) {
           console.log(error)
@@ -413,7 +437,7 @@ export default {
         padding: 8px 0;
     }
     .book-comments-bd .book-comments-content {
-        line-height: 20px;
+        line-height: 0px;
         padding: 5px 0;
     }
     .book-comments-user{
@@ -424,7 +448,7 @@ export default {
     margin: 50px 0;
     }
     .book-comments-footer{
-        margin-top: 40px;
+        margin-top: 20px;
         margin-left: 100px
     }
     .comments-item{
@@ -432,5 +456,14 @@ export default {
     }
     .comments-details{
         margin-left: 100px
+    }
+
+    .commentsReply {
+      font-weight: 500;
+      font-size: 14px;
+    }
+    .time {
+    font-size: 13px;
+    color: #999;
     }
 </style>
