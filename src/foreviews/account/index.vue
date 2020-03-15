@@ -35,8 +35,8 @@
                     <el-form-item label="旧密码" prop="oldPass">
                         <el-input type="password" v-model.number="passResetForm.oldPass"></el-input>
                     </el-form-item>
-                    <el-form-item label="密码" prop="pass">
-                        <el-input type="password" v-model="passResetForm.pass" autocomplete="off"></el-input>
+                    <el-form-item label="密码" prop="newPass">
+                        <el-input type="password" v-model="passResetForm.newPass" autocomplete="off"></el-input>
                     </el-form-item>
                     <el-form-item label="确认密码" prop="checkPass">
                         <el-input type="password" v-model="passResetForm.checkPass" autocomplete="off"></el-input>
@@ -45,7 +45,7 @@
 
                 <div slot="footer" class="dialog-footer">
                     <el-button @click="dialogFormVisible = false">取 消</el-button>
-                    <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+                    <el-button type="primary" @click="passReset('passResetForm')">确 定</el-button>
                 </div>
             </el-dialog>
         </div>
@@ -66,7 +66,7 @@ export default {
         callback(new Error('请输入旧密码'))
       } else {
         if (this.passResetForm.checkPass !== '') {
-          // this.$refs.passResetForm.validateField('checkPass')
+          this.$refs.passResetForm.validateField('checkPass')
           // 这里检查密码是否正确
         }
         callback()
@@ -85,7 +85,7 @@ export default {
     var validatePass2 = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('请再次输入密码'))
-      } else if (value !== this.passResetForm.pass) {
+      } else if (value !== this.passResetForm.newPass) {
         callback(new Error('两次输入密码不一致!'))
       } else {
         callback()
@@ -97,13 +97,11 @@ export default {
       formLabelWidth: '120px',
       accountResetForm: {
         name: '',
-        pass: '',
-        checkPass: '',
         email: ''
       },
       passResetForm: {
         oldPass: '',
-        pass: '',
+        newPass: '',
         checkPass: ''
       },
       rules: {
@@ -112,13 +110,13 @@ export default {
           { min: 3, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur' }
         ],
         email: [
-          { required: true, message: '请输入邮箱地址', trigger: 'blur' },
+          { required: false, message: '请输入邮箱地址', trigger: 'blur' },
           { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change']
           }],
         oldPass: [
           { required: true, validator: validateOldPass, trigger: 'blur' }
         ],
-        pass: [
+        newPass: [
           { required: true, validator: validatePass, trigger: 'blur' }
         ],
         checkPass: [
@@ -134,19 +132,78 @@ export default {
   methods: {
     submitForm (formName) {
       this.$refs[formName].validate((valid) => {
+        console.log('测试')
         if (valid) {
-          alert('submit!')
+          this.$axios.put('user/update', {
+            userId: this.$store.state.user.userId,
+            userName: this.accountResetForm.name,
+            email: this.accountResetForm.email
+          })
+            .then(response => {
+              console.log(response.data)
+              if (response.data.code === '200') {
+                this.$notify({
+                  title: '成功',
+                  message: response.data.msg,
+                  type: 'success'
+                })
+              }
+
+              if (response.data.code === '501') {
+                this.$notify.error({
+                  title: '错误',
+                  message: response.data.data
+                })
+              }
+            })
+            .catch(function (error) {
+              console.log(error)
+            })
         } else {
-          console.log('error submit!!')
           return false
         }
       })
     },
-    // resetForm (formName) {
-    //   this.$refs[formName].resetFields()
-    // },
-    resetPass () {
 
+    resetForm (formName) {
+      this.$refs[formName].resetFields()
+    },
+
+    passReset (formName) {
+      // 重置密码
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.$axios.put('user/passReset', {
+            userId: this.$store.state.user.userId,
+            oldPass: this.passResetForm.oldPass,
+            newPass: this.passResetForm.newPass
+          })
+            .then(response => {
+              console.log(response.data)
+              if (response.data.code === '501') {
+                this.$notify.error({
+                  title: '错误',
+                  message: response.data.msg
+                })
+              }
+
+              if (response.data.code === '200') {
+                this.$notify({
+                  title: '成功',
+                  message: response.data.msg,
+                  type: 'success'
+                })
+                this.resetForm(formName)
+                this.dialogFormVisible = false
+              }
+            })
+            .catch(function (error) {
+              console.log(error)
+            })
+        } else {
+          return false
+        }
+      })
     }
   },
 
