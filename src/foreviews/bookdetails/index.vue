@@ -99,17 +99,20 @@
               <div class="book-comments-footer">
                   <time class="time">{{comment.commentsTime}}</time>
                   <el-badge :value="comment.replyCount" :max="99" class="comments-item" type="primary">
-                  <el-button type="text" size="small" @click="showCommentsReply(index,comment)">评论</el-button>
+                    <el-button type="text" size="small" @click="showCommentsReply(index,comment)">评论</el-button>
                   </el-badge>
                   <el-badge :value="comment.likeNum" :max="999" class="thumb-up-item">
-                  <el-button type="text" size="small" @click="likeComments(comment)">有用</el-button>
+                    <el-button type="text" size="small" @click="likeComments(comment)">有用</el-button>
                   </el-badge>
+                    <el-button type="text" size="small" @click="commentsReplyDialog(comment)">回复</el-button>
               </div>
               <div>
                   <div class="comments-details" v-show="comment.isShow">
                       <div class="commentsReply" v-for="(replyItem,i) in commentsReplyList[index]" :key="i">
                         <p style="font-size:14px;margin-bottom:0px">{{replyItem.fromUserName}} 回复 {{replyItem.toUserName}}
-                        <time class="time">{{replyItem.replyTime}}</time></p>
+                          <time style="margin-left:10px" class="time">{{replyItem.replyTime}}</time>
+                          <el-button type="text" size="small" style="margin-left:15px" @click="commentsReplyDialogSub(replyItem)">回复</el-button>
+                        </p>
                         <br/>
                         <p style="margin-top:-5px;text-indent:25px;">{{replyItem.content}}</p>
                       </div>
@@ -142,6 +145,44 @@
           </el-input>
           <div slot="footer" class="dialog-footer">
             <el-button type="primary" @click="submitComment">保 存</el-button>
+          </div>
+        </el-dialog>
+
+        <!--短评回复 -->
+        <el-dialog :close-on-click-modal= false :close-on-press-escape= false title="回复短评" :visible.sync="dialogReplyComment">
+          <div style="margin-top:-30px">
+            <h2 :v-model="commentItem">To {{commentItem.userName}}</h2>
+          </div>
+          <h3 :v-model="commentItem">Ta的简评: {{commentItem.content}}</h3>
+          <el-input
+            type="textarea"
+            :autosize="{ minRows: 2, maxRows: 4}"
+            maxlength="100"
+            placeholder="请输入内容"
+            v-model="commentText"
+            show-word-limit>
+          </el-input>
+          <div slot="footer" class="dialog-footer">
+            <el-button type="primary" @click="commentsReply">回 复</el-button>
+          </div>
+        </el-dialog>
+
+        <!--短评回复 -->
+        <el-dialog :close-on-click-modal= false :close-on-press-escape= false title="回复短评" :visible.sync="dialogReplyCommentSub">
+          <div style="margin-top:-30px">
+            <h2 :v-model="replyItem">{{replyItem.fromUserName}} 回复 {{replyItem.toUserName}}</h2>
+          </div>
+          <h3 :v-model="replyItem">Ta的回复: {{replyItem.content}}</h3>
+          <el-input
+            type="textarea"
+            :autosize="{ minRows: 2, maxRows: 4}"
+            maxlength="100"
+            placeholder="请输入内容"
+            v-model="commentText"
+            show-word-limit>
+          </el-input>
+          <div slot="footer" class="dialog-footer">
+            <el-button type="primary" @click="commentsReplySub">回 复</el-button>
           </div>
         </el-dialog>
 
@@ -184,9 +225,14 @@ export default {
       dyAvatar: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
       myRate: null,
       dialogWriteComment: false,
+      dialogReplyComment: false,
+      dialogReplyCommentSub: false,
       commentText: '',
       commentsList: '',
-      commentsReplyList: []
+      commentsReplyList: [],
+      commentItem: '',
+      replyItem: '',
+      replytype: ''
 
     }
   },
@@ -285,9 +331,95 @@ export default {
       }
     },
 
-    // 回复评论
-    commentsReply () {
+    // 回复评论弹窗
+    commentsReplyDialog (comment) {
+      this.dialogReplyComment = true
+      this.commentItem = comment
+      this.replytype = 'comment'
+    },
 
+    commentsReplyDialogSub (replyItem) {
+      this.dialogReplyCommentSub = true
+      this.replyItem = replyItem
+      this.replytype = 'reply'
+    },
+
+    // 针对评论的回复
+    commentsReply () {
+      var _this = this
+      this.$axios.put('reply/submitReply', {
+        commentId: this.commentItem.cid,
+        replyId: this.commentItem.cid,
+        replyType: this.replytype,
+        content: this.commentText,
+        fromUid: this.$store.state.user.userId,
+        toUid: this.commentItem.uid
+      })
+        .then(response => {
+          console.log(response.data)
+          if (response.data.code === '200') {
+            this.$notify({
+              title: '成功',
+              message: response.data.msg,
+              type: 'success'
+            })
+            // 调用一次从新加载评论
+            _this.loadComments(this.bid)
+            // 清除输入框
+            _this.commentText = ''
+            _this.dialogReplyComment = false
+          }
+
+          // 提交失败
+          if (response.data.code === '501') {
+            this.$notify.error({
+              title: '错误',
+              message: response.data.msg
+            })
+          }
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+    },
+
+    // 针对评论中回复的回复
+    commentsReplySub () {
+      var _this = this
+      this.$axios.put('reply/submitReply', {
+        commentId: this.replyItem.commentId,
+        replyId: this.replyItem.replyId,
+        replyType: this.replytype,
+        content: this.commentText,
+        fromUid: this.$store.state.user.userId,
+        toUid: this.replyItem.fromUid
+      })
+        .then(response => {
+          console.log(response.data)
+          if (response.data.code === '200') {
+            this.$notify({
+              title: '成功',
+              message: response.data.msg,
+              type: 'success'
+            })
+            // 调用一次从新加载评论
+            _this.loadComments(this.bid)
+            // 清除输入框
+            _this.commentText = ''
+            _this.dialogReplyComment = false
+          }
+
+          // 提交失败
+          if (response.data.code === '501') {
+            this.$notify.error({
+              title: '错误',
+              message: response.data.msg
+            })
+          }
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
     },
 
     // 加载回复评论
@@ -451,8 +583,11 @@ export default {
         margin-top: 20px;
         margin-left: 100px
     }
-    .comments-item{
+    .comments-item {
         margin: 0 40px
+    }
+    .thumb-up-item {
+       margin-right: 40px;
     }
     .comments-details{
         margin-left: 100px
