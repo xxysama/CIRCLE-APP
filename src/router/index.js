@@ -86,6 +86,18 @@ const routes = [
   },
 
   {
+    path: '/circle/:cid',
+    component: ForeLayout,
+    children: [{
+      path: '',
+      component: () => import('@/foreviews/circledetails/index'),
+      meta: {
+        requireAuth: true
+      }
+    }]
+  },
+
+  {
     path: '/dynamic',
     component: ForeLayout,
     children: [{

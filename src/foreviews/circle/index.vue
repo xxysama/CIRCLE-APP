@@ -5,7 +5,7 @@
     <div>
       <h2>热门圈子</h2>
       <el-col :span="8" v-for="item in 3" :key="item">
-        <el-card class="hot-circle-card" :body-style="{ padding: '0px' }" shadow="hover" @click.native="openbook(item)">
+        <el-card class="hot-circle-card" :body-style="{ padding: '0px' }" shadow="hover" @click.native="openCircle(item)">
           <div class="hot-circle-container">
             <div class="hot-circle-pic">
                 <img src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg" style="width: 100px; height: 100px" >
@@ -20,7 +20,16 @@
                 </div>
             </div>
             <div class="hot-circle-op">
-              <el-button type="text">申请加入</el-button>
+              <el-popconfirm @onConfirm="confirmApply(item)"
+                placement="top-start"
+                confirmButtonText='好的'
+                cancelButtonText='不用了'
+                icon="el-icon-info"
+                iconColor="red"
+                title="确认申请加入"
+              >
+                <el-button type="text" slot="reference">申请加入</el-button>
+              </el-popconfirm>
             </div>
           </div>
         </el-card>
@@ -163,11 +172,15 @@ export default {
 
   },
   methods: {
-    openbook (bid) {
-      console.log(bid)
+    openCircle (cid) {
+      this.$router.push({ path: '/circle/' + cid })
     },
     shiftClick (tab, event) {
       console.log(tab.name)
+    },
+
+    confirmApply (circle) {
+      alert(circle)
     }
   }
 
