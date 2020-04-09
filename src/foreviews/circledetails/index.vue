@@ -68,6 +68,17 @@
                   width="">
                 </el-table-column>
               </el-table>
+              <div class="topic-pagination">
+                <el-pagination
+                  background
+                  @size-change="handleSizeChange"
+                  @current-change="handleCurrentChange"
+                  :current-page.sync="currentPage"
+                  :page-size="12"
+                  layout="total, prev, pager, next, jumper"
+                  :total= total>
+                </el-pagination>
+              </div>
             </div>
 
         </el-main>
@@ -122,7 +133,9 @@ export default {
         date: '2016-05-03',
         name: '王小虎',
         reply: '444'
-      }]
+      }],
+      currentPage: 1,
+      total: 0
     }
   },
   components: {
@@ -131,6 +144,20 @@ export default {
   methods: {
     openTopic (row) {
       alert(row.reply)
+    },
+
+    // 处理页码大小
+    handleSizeChange () {
+
+    },
+
+    // 当前页变动时候触发
+    handleCurrentChange () {
+      if (this.menuactive === '0') {
+        // this.loadBookByPage(this.currentPage)
+      } else {
+        // this.loadTagBookByPage(this.menuactive, this.currentPage)
+      }
     }
   },
 
@@ -189,5 +216,10 @@ export default {
 
     .topic-tab{
       margin: 30px 0 ;
+    }
+
+    .topic-pagination {
+      margin-top: 20px;
+      margin-left: 25%;
     }
 </style>
