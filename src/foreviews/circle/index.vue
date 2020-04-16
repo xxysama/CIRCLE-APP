@@ -4,23 +4,23 @@
   <el-main>
     <div>
       <h2>热门圈子</h2>
-      <el-col :span="8" v-for="item in 3" :key="item">
+      <el-col :span="8" v-for="topic in topicCircleDataList" :key="topic.id">
         <el-card class="hot-circle-card" :body-style="{ padding: '0px' }" shadow="hover" @click.native="openCircle(item)">
           <div class="hot-circle-container">
             <div class="hot-circle-pic">
                 <img src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg" style="width: 100px; height: 100px" >
             </div>
             <div class="hot-circle-details">
-                <h3>小组名称</h3>
-                <div>
-                  化简为奢，书中自有颜如玉
+                <h4>{{topic.circleName}}</h4>
+                <div style="height:40px">
+                  {{topic.circleMotto | ellipsis}}
                 </div>
-                <div>
-                  成员
+                <div style="margin-top:10px">
+                  成员:{{topic.memberNumber}}
                 </div>
             </div>
             <div class="hot-circle-op">
-              <el-popconfirm @onConfirm="confirmApply(item)"
+              <el-popconfirm @onConfirm="confirmApply(topic.id)"
                 placement="top-start"
                 confirmButtonText='好的'
                 cancelButtonText='不用了'
@@ -83,6 +83,7 @@ export default {
   data () {
     return {
       activeLatestM: 'hot',
+      topicCircleDataList: [],
       circleDataList: []
     }
   },
@@ -97,12 +98,24 @@ export default {
       console.log(tab.name)
     },
 
+    // 初始化热门展示圈子信息
+    initTopicCircleInfo () {
+      var _this = this
+      this.$axios.get('circle/topic')
+        .then(response => {
+          console.log(response.data)
+          _this.topicCircleDataList = response.data
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+    },
+
     // 初始化展示圈子信息
     initCircleinfo () {
       var _this = this
       this.$axios.get('circle/init')
         .then(response => {
-          console.log(response.data)
           _this.circleDataList = response.data
         })
         .catch(function (error) {
@@ -116,8 +129,21 @@ export default {
   },
 
   mounted () {
+    this.initTopicCircleInfo()
     // 初始化小组基本信息
     this.initCircleinfo()
+  },
+
+  filters: {
+    // 超过字数 省略
+    ellipsis (value) {
+      if (!value) return ''
+      if (!value) return ''
+      if (value.length > 19) {
+        return value.slice(0, 19) + '...'
+      }
+      return value
+    }
   }
 
 }
