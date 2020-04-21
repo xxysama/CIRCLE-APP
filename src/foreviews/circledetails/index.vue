@@ -48,22 +48,22 @@
                 :data="tableData"
                 style="width: 95%">
                 <el-table-column
-                  prop="disscuss"
+                  prop="topicTitle"
                   label="讨论"
                   width="300">
                 </el-table-column>
                 <el-table-column
-                  prop="name"
+                  prop="authorName"
                   label="作者"
                   width="200">
                 </el-table-column>
                 <el-table-column
-                  prop="reply"
+                  prop="replyCount"
                   label="回应"
                   width="">
                 </el-table-column>
                 <el-table-column
-                  prop="date"
+                  prop="updateTime"
                   label="最后回应"
                   width="">
                 </el-table-column>
@@ -146,6 +146,22 @@ export default {
       alert(row.reply)
     },
 
+    // 加载话题
+    loadTopicByPage () {
+      var cid = this.cid
+      var page = this.currentPage
+      var _this = this
+      this.$axios.get('circle/topic/' + cid + '/' + page)
+        .then(response => {
+          _this.tableData = response.data.records
+          _this.total = response.data.total
+          _this.currentPage = response.data.current
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+    },
+
     // 处理页码大小
     handleSizeChange () {
 
@@ -163,6 +179,7 @@ export default {
 
   mounted () {
     this.cid = this.$route.params.cid
+    this.loadTopicByPage()
   }
 }
 </script>

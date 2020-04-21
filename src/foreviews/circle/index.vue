@@ -5,7 +5,7 @@
     <div>
       <h2>热门圈子</h2>
       <el-col :span="8" v-for="topic in topicCircleDataList" :key="topic.id">
-        <el-card class="hot-circle-card" :body-style="{ padding: '0px' }" shadow="hover" @click.native="openCircle(item)">
+        <el-card class="hot-circle-card" :body-style="{ padding: '0px' }" shadow="hover" @click.native="openCircle(topic.id)">
           <div class="hot-circle-container">
             <div class="hot-circle-pic">
                 <img src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg" style="width: 100px; height: 100px" >
@@ -48,7 +48,7 @@
       </div>
       <div>
         <el-col :span="6" v-for="info in data.circleSimpleInfoDtos" :key="info.id">
-          <el-card  class="classify-circle-crad" :body-style="{ padding: '0px' }" shadow="hover" @click.native="openbook(info.id)">
+          <el-card  class="classify-circle-crad" :body-style="{ padding: '0px' }" shadow="hover" @click.native="openCircle(info.id)">
             <div>
               <img src='' class="img" style="width: 46px; height: 46px">
               <span class="classify-circle-title">{{info.circleName}}</span>
