@@ -92,6 +92,7 @@ export default {
   },
   methods: {
     openCircle (cid) {
+      // 跳转具体圈子
       this.$router.push({ path: '/circle/' + cid })
     },
     shiftClick (tab, event) {
