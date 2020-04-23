@@ -17,7 +17,7 @@
                     {{topic.circleMotto | ellipsis}}
                   </div>
                   <div style="margin-top:10px">
-                    成员:{{topic.memberNumber}}
+                    成员数: {{ topic.memberNumber}}
                   </div>
               </div>
             </div>
@@ -57,7 +57,7 @@
               <span class="classify-circle-title">{{info.circleName}}</span>
             </div>
             <div style="padding: 8px;">
-              <span :underline="false" href="#">{{info.memberNumber}}成员</span>
+              <span :underline="false" href="#">{{info.memberNumber}}成员数</span>
               <div class="hot-circle-op">
                 <el-popconfirm @onConfirm="confirmApply(topic.id)"
                   placement="top-start"
@@ -80,9 +80,9 @@
   <el-aside width="25%">
     <div class="rank-list-week">
       <h3>随机小组</h3>
-      <div v-for="item in 10" :key="item">
-        <el-link :underline='false'>{{item}}</el-link>
-        <el-divider></el-divider>
+      <div v-for="rand in randomCircleList" :key="rand.id">
+        <el-link :underline='false' @click="openCircle(rand.id)" >{{rand.circleName}}</el-link>
+        <el-divider class="circle-random-divider"></el-divider>
       </div>
     </div>
   </el-aside>
@@ -96,7 +96,8 @@ export default {
     return {
       activeLatestM: 'hot',
       topicCircleDataList: [],
-      circleDataList: []
+      circleDataList: [],
+      randomCircleList: []
     }
   },
   components: {
@@ -136,6 +137,18 @@ export default {
         })
     },
 
+    // 初始化随机圈子
+    initRandomCircleInfo () {
+      var _this = this
+      this.$axios.get('circle/random')
+        .then(response => {
+          _this.randomCircleList = response.data
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+    },
+
     confirmApply (circleId) {
       var _this = this
       this.$axios.put('circle/member/apply', {
@@ -166,12 +179,14 @@ export default {
           console.log(error)
         })
     }
+
   },
 
   mounted () {
     this.initTopicCircleInfo()
     // 初始化小组基本信息
     this.initCircleinfo()
+    this.initRandomCircleInfo()
   },
 
   filters: {
@@ -262,5 +277,11 @@ export default {
   }
   .classify-tag{
     margin-right: 10px
+  }
+
+  .circle-random-divider {
+     margin: 8px 0;
+     background: 0 0;
+     border-top: 1px dashed #e8eaec;
   }
 </style>

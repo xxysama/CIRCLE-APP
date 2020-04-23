@@ -10,7 +10,16 @@
                 <h2>{{circleInfo.circleName}}</h2>
             </div>
             <div style="padding-top:20px;margin-bottom:45px">
-                <el-button size="medium" type="success">加入圈子</el-button>
+                <el-popconfirm  @onConfirm="confirmApply(cid)"
+                  placement="top-start"
+                  confirmButtonText='好的'
+                  cancelButtonText='不用了'
+                  icon="el-icon-info"
+                  iconColor="red"
+                  title="确认申请加入"
+                >
+                  <el-button size="medium" type="success" slot="reference">加入圈子</el-button>
+                </el-popconfirm>
             </div>
             <div class="circle-board">
                 <p>创建于: {{circleInfo.createdTime}}</p>
@@ -113,6 +122,37 @@ export default {
         .then(response => {
           console.log(response.data)
           _this.circleInfo = response.data
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+    },
+
+    confirmApply (circleId) {
+      var _this = this
+      this.$axios.put('circle/member/apply', {
+        circleId: circleId,
+        memberId: this.$store.state.user.userId
+      })
+        .then(response => {
+          console.log(response.data)
+          if (response.data.code === '200') {
+            this.$notify({
+              title: '成功',
+              message: response.data.msg,
+              type: 'success'
+            })
+            // 跳转小组
+            _this.openCircle(circleId)
+          }
+
+          // 提交失败
+          if (response.data.code === '501') {
+            this.$notify.error({
+              title: '错误',
+              message: response.data.data
+            })
+          }
         })
         .catch(function (error) {
           console.log(error)
