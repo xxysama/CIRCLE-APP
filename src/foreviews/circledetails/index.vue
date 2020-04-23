@@ -22,7 +22,9 @@
 
             <div class="circle-topics">
               <div class="topic-tab">
-                  <h3>最近讨论</h3>
+                  <h3>最近讨论
+                    <el-button type="primary" size="medium" icon="el-icon-plus" style="float:right;margin-right:100px">发帖</el-button>
+                  </h3>
               </div>
               <el-table
                 @row-click = "openTopic"

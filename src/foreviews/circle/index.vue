@@ -5,20 +5,23 @@
     <div>
       <h2>热门圈子</h2>
       <el-col :span="8" v-for="topic in topicCircleDataList" :key="topic.id">
-        <el-card class="hot-circle-card" :body-style="{ padding: '0px' }" shadow="hover" @click.native="openCircle(topic.id)">
+        <el-card class="hot-circle-card" :body-style="{ padding: '0px' }" shadow="hover">
           <div class="hot-circle-container">
-            <div class="hot-circle-pic">
-                <img src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg" style="width: 100px; height: 100px" >
+            <div  @click="openCircle(topic.id)">
+              <div class="hot-circle-pic">
+                  <img src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg" style="width: 100px; height: 100px" >
+              </div>
+              <div class="hot-circle-details">
+                  <h4>{{topic.circleName}}</h4>
+                  <div style="height:40px">
+                    {{topic.circleMotto | ellipsis}}
+                  </div>
+                  <div style="margin-top:10px">
+                    成员:{{topic.memberNumber}}
+                  </div>
+              </div>
             </div>
-            <div class="hot-circle-details">
-                <h4>{{topic.circleName}}</h4>
-                <div style="height:40px">
-                  {{topic.circleMotto | ellipsis}}
-                </div>
-                <div style="margin-top:10px">
-                  成员:{{topic.memberNumber}}
-                </div>
-            </div>
+
             <div class="hot-circle-op">
               <el-popconfirm @onConfirm="confirmApply(topic.id)"
                 placement="top-start"
@@ -48,16 +51,25 @@
       </div>
       <div>
         <el-col :span="6" v-for="info in data.circleSimpleInfoDtos" :key="info.id">
-          <el-card  class="classify-circle-crad" :body-style="{ padding: '0px' }" shadow="hover" @click.native="openCircle(info.id)">
-            <div>
+          <el-card  class="classify-circle-crad" :body-style="{ padding: '0px' }" shadow="hover" >
+            <div @click="openCircle(info.id)">
               <img src='' class="img" style="width: 46px; height: 46px">
               <span class="classify-circle-title">{{info.circleName}}</span>
             </div>
             <div style="padding: 8px;">
               <span :underline="false" href="#">{{info.memberNumber}}成员</span>
-                <div class="hot-circle-op">
-                  <el-button type="text">申请</el-button>
-                </div>
+              <div class="hot-circle-op">
+                <el-popconfirm @onConfirm="confirmApply(topic.id)"
+                  placement="top-start"
+                  confirmButtonText='好的'
+                  cancelButtonText='不用了'
+                  icon="el-icon-info"
+                  iconColor="red"
+                  title="确认申请加入"
+                >
+                  <el-button type="text" slot="reference">申请</el-button>
+                </el-popconfirm>
+              </div>
             </div>
           </el-card>
         </el-col>
@@ -124,8 +136,35 @@ export default {
         })
     },
 
-    confirmApply (circle) {
-      alert(circle)
+    confirmApply (circleId) {
+      var _this = this
+      this.$axios.put('circle/member/apply', {
+        circleId: circleId,
+        memberId: this.$store.state.user.userId
+      })
+        .then(response => {
+          console.log(response.data)
+          if (response.data.code === '200') {
+            this.$notify({
+              title: '成功',
+              message: response.data.msg,
+              type: 'success'
+            })
+            // 跳转小组
+            _this.openCircle(circleId)
+          }
+
+          // 提交失败
+          if (response.data.code === '501') {
+            this.$notify.error({
+              title: '错误',
+              message: response.data.data
+            })
+          }
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
     }
   },
 
