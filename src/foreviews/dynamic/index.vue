@@ -19,9 +19,13 @@
       <div class="send-picture">
         <el-upload
           class=""
-          action="https://jsonplaceholder.typicode.com/posts/"
+          :action="uploadQiniuUrl"
+          ref="upload"
+          :data="qiniuData"
           :on-preview="handlePictureCardPreview"
           :on-remove="handleRemove"
+          :before-upload="beforeUploadGetKey"
+          :on-success="uploadSuccess"
           :file-list="fileList"
           :auto-upload="false"
           list-type="picture-card">
@@ -33,7 +37,7 @@
         </el-dialog>
       </div>
       <div class="dynamic-bottom">
-          <el-button>发布</el-button>
+          <el-button  @click="submitUpload">发布</el-button>
       </div>
     </el-card>
 
@@ -110,13 +114,12 @@ export default {
       dyAvatar: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
       dialogImageUrl: '',
       dialogVisible: false,
-      fileList: [
-        { name: 'food.jpeg',
-          url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
-        },
-        { name: 'food2.jpeg',
-          url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
-        }],
+      fileList: [],
+      uploadQiniuUrl: 'https://upload.qiniup.com',
+      qiniuData: { // 上传图片携带的参数
+        token: '',
+        key: ''
+      },
       commentsShow: false
 
     }
@@ -135,9 +138,39 @@ export default {
       this.dialogImageUrl = file.url
       this.dialogVisible = true
     },
+
+    getToken () { // 上传之前获取 token
+      var _this = this
+      this.$axios.get('qiniu/token')
+        .then(response => {
+          // 获取 token
+          console.log(response.data)
+          _this.qiniuData.token = response.data
+        })
+    },
+
+    beforeUploadGetKey () {
+      var s4 = (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1)
+      var guid = (s4 + s4 + '-' + s4 + '-' + s4 + '-' + s4 + '-' + s4 + s4 + s4)
+      this.qiniuData.key = guid
+    },
+
+    submitUpload () {
+      console.log('测试上传')
+      this.$refs.upload.submit()
+    },
+
+    uploadSuccess (res, file) {
+      console.log('返回数据' + res.key)
+    },
+
     showComments () {
       this.commentsShow = !this.commentsShow
     }
+  },
+
+  mounted () {
+    this.getToken()
   }
 
 }

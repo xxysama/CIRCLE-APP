@@ -197,7 +197,7 @@ export default {
   mounted () {
     this.cid = this.$route.params.cid
     this.loadCircleInfo()
-    this.loadTopicByPage()
+    // this.loadTopicByPage()
   }
 }
 </script>
