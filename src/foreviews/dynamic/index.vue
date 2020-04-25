@@ -26,18 +26,17 @@
           :on-remove="handleRemove"
           :before-upload="beforeUploadGetKey"
           :on-success="uploadSuccess"
-          :file-list="fileList"
           :auto-upload="false"
           list-type="picture-card">
           <i class="el-icon-plus"></i>
-          <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+          <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过5M</div>
         </el-upload>
         <el-dialog :visible.sync="dialogVisible">
           <img width="60%" :src="dialogImageUrl" alt="">
         </el-dialog>
       </div>
       <div class="dynamic-bottom">
-          <el-button  @click="submitUpload">发布</el-button>
+          <el-button  @click="subimtDynamic">发布</el-button>
       </div>
     </el-card>
 
@@ -110,6 +109,7 @@
 export default {
   data () {
     return {
+      dynamicId: '',
       dynamicText: '',
       dyAvatar: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
       dialogImageUrl: '',
@@ -128,6 +128,14 @@ export default {
 
   },
   methods: {
+    // 生成uuid的方法
+    S4 () {
+      return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1)
+    },
+    guid () {
+      return (this.S4() + this.S4() + '-' + this.S4() + '-' + this.S4() + '-' + this.S4() + '-' + this.S4() + this.S4() + this.S4())
+    },
+
     handleRemove (file, fileList) {
       console.log(file, fileList)
     },
@@ -144,24 +152,115 @@ export default {
       this.$axios.get('qiniu/token')
         .then(response => {
           // 获取 token
-          console.log(response.data)
           _this.qiniuData.token = response.data
         })
     },
 
-    beforeUploadGetKey () {
-      var s4 = (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1)
-      var guid = (s4 + s4 + '-' + s4 + '-' + s4 + '-' + s4 + '-' + s4 + s4 + s4)
-      this.qiniuData.key = guid
+    beforeUploadGetKey (file) {
+      console.log('之前' + file)
+      const isJPG = file.type === 'image/jpeg/' || 'image/png'
+      const isLt2M = file.size / 1024 / 1024 < 5
+
+      if (!isJPG) {
+        this.$message.error('上传头像图片只能是 JPG 格式!')
+      }
+      if (!isLt2M) {
+        this.$message.error('上传头像图片大小不能超过 5MB!')
+      }
+
+      this.qiniuData.key = this.guid()
+
+      return isJPG && isLt2M
     },
 
+    subimtDynamic () {
+      // 文本信息提交后端获取主键id
+      this.submitDynamicText()
+
+      // 上传图片
+      this.submitUpload()
+
+      // // 动态文本和图片关系数据储存
+      // this.submitDybamicPicinfo()
+    },
+
+    // 上传图片到七牛云图库
     submitUpload () {
-      console.log('测试上传')
       this.$refs.upload.submit()
     },
 
     uploadSuccess (res, file) {
       console.log('返回数据' + res.key)
+
+      this.fileList.push({
+        dynamicId: this.dynamicId,
+        pictureSrc: res.key
+      })
+    },
+
+    // 提交动态文本信息
+    submitDynamicText () {
+      var _this = this
+      this.$axios.post('circle/dynamic/submit', {
+        userId: this.$store.state.user.userId,
+        content: this.dynamicText
+      })
+        .then(response => {
+          if (response.data.code === '200') {
+            this.$notify({
+              title: '成功',
+              message: response.data.msg,
+              type: 'success'
+            })
+
+            // 获取刚刚发布动态的数据库主键id
+            console.log('返回主键' + response.data.data)
+            this.dynamicId = response.data.data
+
+            // 清除文本信息
+            _this.dynamicText = ''
+
+            // 动态文本和图片关系数据储存
+            this.submitDybamicPicinfo()
+          }
+
+          // 提交失败
+          if (response.data.code === '501') {
+            this.$notify.error({
+              title: '错误',
+              message: response.data.msg
+            })
+          }
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+    },
+
+    // 提交动态图片关系数据
+    submitDybamicPicinfo () {
+      // var _this = this
+      this.$axios.post('circle/dynamic/pic/submit', this.$qs.stringify({ dynamicPics: this.fileList }, { indices: false }))
+        .then(response => {
+          if (response.data.code === '200') {
+            this.$notify({
+              title: '成功',
+              message: response.data.msg,
+              type: 'success'
+            })
+          }
+
+          // 提交失败
+          if (response.data.code === '501') {
+            this.$notify.error({
+              title: '错误',
+              message: response.data.data
+            })
+          }
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
     },
 
     showComments () {

@@ -151,7 +151,7 @@ export default {
 
     confirmApply (circleId) {
       var _this = this
-      this.$axios.put('circle/member/apply', {
+      this.$axios.post('circle/member/apply', {
         circleId: circleId,
         memberId: this.$store.state.user.userId
       })
