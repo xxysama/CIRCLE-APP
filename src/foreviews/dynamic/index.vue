@@ -43,40 +43,49 @@
     <h3>好友动态</h3>
     <el-divider></el-divider>
 
-    <div class="dynamic" v-for="i in 4" :key="i">
-      <div class="dynamic-hd">
-        <span><el-avatar shape="square" :size="60" :src="dyAvatar"></el-avatar></span>
-      </div>
-      <div class="dynamic-bd">
-        <el-link :underline="false" style="font-size:20px">用户名称</el-link>
-        <div class="dynamic-meta">
+    <div class="infinite-list-wrapper" style="overflow:auto">
+      <ul
+        class="list"
+        v-infinite-scroll="load"
+        infinite-scroll-disabled="disabled">
+        <div class="dynamic" v-for="i in count" :key="i">
+          <div class="dynamic-hd">
+            <span><el-avatar shape="square" :size="60" :src="dyAvatar"></el-avatar></span>
+          </div>
+          <div class="dynamic-bd">
+            <el-link :underline="false" style="font-size:20px">用户名称</el-link>
+            <div class="dynamic-meta">
 
+            </div>
+            <div class="dynamic-content">
+              创作这部作品的契机，在于一次相谈甚欢的约稿。可等到头脑冷静下来，我心里叫苦不迭。这只怕是我见过最简洁的选题了，没有类型，没有梗概，没有构想，没有时间节点……有的只是“徐霞客”三个字，以及几个关于他...
+            </div>
+            <div class="dy-picture-container">
+              <img class="dy-picture" v-for="fl in fileList" :key="fl.name" style="width: 100px; height: 100px" :src="fl.url">
+            </div>
+          </div>
+          <div class="dynamic-footer">
+            <time class="time">1月13日</time>
+            <el-badge :value="66" :max="99" class="comments-item" type="primary">
+              <el-button type="text" size="small" @click="showComments">评论</el-button>
+            </el-badge>
+            <el-badge :value="200" :max="99" class="thumb-up-item">
+              <el-button type="text" size="small">点赞</el-button>
+            </el-badge>
+          </div>
+          <div>
+            <div class="comments-details" v-if="commentsShow">
+                <li v-for="i in 5" :key="i">{{i}}</li>
+                <el-input placeholder="请输入内容" class="input-with-select">
+                  <el-button slot="append" icon="el-icon-search"></el-button>
+                </el-input>
+            </div>
+          </div>
+          <el-divider class="dynamic-divider"></el-divider>
         </div>
-        <div class="dynamic-content">
-          创作这部作品的契机，在于一次相谈甚欢的约稿。可等到头脑冷静下来，我心里叫苦不迭。这只怕是我见过最简洁的选题了，没有类型，没有梗概，没有构想，没有时间节点……有的只是“徐霞客”三个字，以及几个关于他...
-        </div>
-        <div class="dy-picture-container">
-           <img class="dy-picture" v-for="fl in fileList" :key="fl.name" style="width: 100px; height: 100px" :src="fl.url">
-        </div>
-      </div>
-      <div class="dynamic-footer">
-        <time class="time">1月13日</time>
-        <el-badge :value="66" :max="99" class="comments-item" type="primary">
-          <el-button type="text" size="small" @click="showComments">评论</el-button>
-        </el-badge>
-        <el-badge :value="200" :max="99" class="thumb-up-item">
-          <el-button type="text" size="small">点赞</el-button>
-        </el-badge>
-      </div>
-      <div>
-        <div class="comments-details" v-if="commentsShow">
-            <li v-for="i in 5" :key="i">{{i}}</li>
-            <el-input placeholder="请输入内容" class="input-with-select">
-              <el-button slot="append" icon="el-icon-search"></el-button>
-            </el-input>
-        </div>
-      </div>
-      <el-divider class="dynamic-divider"></el-divider>
+      </ul>
+      <h4 v-if="loading" style="text-align:center">加载中...</h4>
+      <h4 v-if="noMore" style="text-align:center">没有更多了</h4>
     </div>
   </el-main>
   <el-aside width="25%">
@@ -114,12 +123,15 @@ export default {
       dyAvatar: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
       dialogImageUrl: '',
       dialogVisible: false,
+      uploadList: [],
       fileList: [],
       uploadQiniuUrl: 'https://upload.qiniup.com',
       qiniuData: { // 上传图片携带的参数
         token: '',
         key: ''
       },
+      loading: false,
+      count: 10,
       commentsShow: false
 
     }
@@ -127,6 +139,16 @@ export default {
   components: {
 
   },
+
+  computed: {
+    noMore () {
+      return this.count >= 20
+    },
+    disabled () {
+      return this.loading || this.noMore
+    }
+  },
+
   methods: {
     // 生成uuid的方法
     S4 () {
@@ -147,7 +169,7 @@ export default {
       this.dialogVisible = true
     },
 
-    getToken () { // 上传之前获取 token
+    getToken () { // 上传之前获取 七牛云token
       var _this = this
       this.$axios.get('qiniu/token')
         .then(response => {
@@ -162,7 +184,7 @@ export default {
       const isLt2M = file.size / 1024 / 1024 < 5
 
       if (!isJPG) {
-        this.$message.error('上传头像图片只能是 JPG 格式!')
+        this.$message.error('上传头像图片只能是 JPG 或者 png 格式!')
       }
       if (!isLt2M) {
         this.$message.error('上传头像图片大小不能超过 5MB!')
@@ -170,32 +192,29 @@ export default {
 
       this.qiniuData.key = this.guid()
 
+      // 添加返回后端数据载体
+      this.fileList.push({
+        dynamicId: this.dynamicId,
+        pictureSrc: 'http://x2y.hqweay.cn/' + this.qiniuData.key
+      })
+
       return isJPG && isLt2M
     },
 
     subimtDynamic () {
       // 文本信息提交后端获取主键id
       this.submitDynamicText()
-
-      // 上传图片
-      this.submitUpload()
-
-      // // 动态文本和图片关系数据储存
-      // this.submitDybamicPicinfo()
     },
 
     // 上传图片到七牛云图库
     submitUpload () {
+      // 上传
       this.$refs.upload.submit()
     },
 
+    // 上传成功钩子函数
     uploadSuccess (res, file) {
       console.log('返回数据' + res.key)
-
-      this.fileList.push({
-        dynamicId: this.dynamicId,
-        pictureSrc: res.key
-      })
     },
 
     // 提交动态文本信息
@@ -215,13 +234,22 @@ export default {
 
             // 获取刚刚发布动态的数据库主键id
             console.log('返回主键' + response.data.data)
+
             this.dynamicId = response.data.data
 
             // 清除文本信息
             _this.dynamicText = ''
 
+            // 组装图片关系载体
+            // 组装关系对象
+            _this.fileList.forEach((item, i) => {
+              item.dynamicId = this.dynamicId
+            })
+            // 上传图片
+            _this.submitUpload()
+
             // 动态文本和图片关系数据储存
-            this.submitDybamicPicinfo()
+            _this.submitDybamicPicinfo()
           }
 
           // 提交失败
@@ -240,7 +268,12 @@ export default {
     // 提交动态图片关系数据
     submitDybamicPicinfo () {
       // var _this = this
-      this.$axios.post('circle/dynamic/pic/submit', this.$qs.stringify({ dynamicPics: this.fileList }, { indices: false }))
+
+      console.log('发送对象' + this.fileList)
+
+      this.$axios.post('circle/dynamic/pic/submit', {
+        dynamicPics: this.fileList
+      })
         .then(response => {
           if (response.data.code === '200') {
             this.$notify({
@@ -261,6 +294,14 @@ export default {
         .catch(function (error) {
           console.log(error)
         })
+    },
+
+    load () {
+      this.loading = true
+      setTimeout(() => {
+        this.count += 2
+        this.loading = false
+      }, 2000)
     },
 
     showComments () {

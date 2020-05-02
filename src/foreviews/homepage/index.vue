@@ -4,9 +4,11 @@
         <el-main>
             <div class="homepage-head">
               <img src='' class="user-img">
+              <el-button type="success" style="float:right" @click="applyFollow">关注</el-button>
               <h2>测试用户</h2>
-              <h4>我的签名档</h4>
+              <h4>喜欢我的语言就关注我吧！</h4>
             </div>
+
             <div>
               <h3 style="color:#007722">碎碎念</h3>
               <el-divider></el-divider>
@@ -109,6 +111,34 @@ export default {
         message: '留言成功！',
         type: 'success'
       })
+    },
+
+    applyFollow () {
+      this.$axios.put('userfollow/apply', {
+        userId: 19,
+        followId: 20
+      })
+        .then(response => {
+          console.log(response.data)
+          if (response.data.code === '200') {
+            this.$notify({
+              title: '成功',
+              message: response.data.msg,
+              type: 'success'
+            })
+          }
+
+          // 提交失败
+          if (response.data.code === '501') {
+            this.$notify.error({
+              title: '错误',
+              message: response.data.data
+            })
+          }
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
     }
   },
 
