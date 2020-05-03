@@ -58,7 +58,7 @@
 
             </div>
             <div class="dynamic-content">
-              创作这部作品的契机，在于一次相谈甚欢的约稿。可等到头脑冷静下来，我心里叫苦不迭。这只怕是我见过最简洁的选题了，没有类型，没有梗概，没有构想，没有时间节点……有的只是“徐霞客”三个字，以及几个关于他...
+                111
             </div>
             <div class="dy-picture-container">
               <img class="dy-picture" v-for="fl in fileList" :key="fl.name" style="width: 100px; height: 100px" :src="fl.url">
@@ -131,7 +131,7 @@ export default {
         key: ''
       },
       loading: false,
-      count: 10,
+      count: 0,
       commentsShow: false
 
     }
@@ -220,7 +220,7 @@ export default {
     // 提交动态文本信息
     submitDynamicText () {
       var _this = this
-      this.$axios.post('circle/dynamic/submit', {
+      this.$axios.post('dynamic/submit', {
         userId: this.$store.state.user.userId,
         content: this.dynamicText
       })
@@ -271,7 +271,7 @@ export default {
 
       console.log('发送对象' + this.fileList)
 
-      this.$axios.post('circle/dynamic/pic/submit', {
+      this.$axios.post('dynamic/pic/submit', {
         dynamicPics: this.fileList
       })
         .then(response => {
@@ -299,18 +299,44 @@ export default {
     load () {
       this.loading = true
       setTimeout(() => {
-        this.count += 2
-        this.loading = false
+        // var _this = this
+        // this.$axios.get('dynamic/list/scorll', {
+        //   userId: this.$store.state.user.userId,
+        //   index: 1
+        // })
+        //   .then(response => {
+        //     console.log(response.data)
+        //     _this.circleInfo = response.data
+        //   })
+        //   .catch(function (error) {
+        //     console.log(error)
+        //   })
+
+        // this.count += 2
+        // this.loading = false
       }, 2000)
     },
 
     showComments () {
       this.commentsShow = !this.commentsShow
+    },
+
+    getDynamicCounts () {
+      var _this = this
+      this.$axios.get('dynamic/count/' + this.$store.state.user.userId)
+        .then(response => {
+          _this.count = response.data
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
     }
+
   },
 
   mounted () {
     this.getToken()
+    this.getDynamicCounts()
   }
 
 }
