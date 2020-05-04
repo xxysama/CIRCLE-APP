@@ -37,6 +37,8 @@
       </div>
       <div class="dynamic-bottom">
           <el-button  @click="subimtDynamic">发布</el-button>
+                    <el-button  @click="test">发布1</el-button>
+
       </div>
     </el-card>
 
@@ -48,28 +50,28 @@
         class="list"
         v-infinite-scroll="load"
         infinite-scroll-disabled="disabled">
-        <div class="dynamic" v-for="i in count" :key="i">
+        <div class="dynamic" v-for="dynamic in scrollDynamics" :key="dynamic.dynamicId">
           <div class="dynamic-hd">
             <span><el-avatar shape="square" :size="60" :src="dyAvatar"></el-avatar></span>
           </div>
           <div class="dynamic-bd">
-            <el-link :underline="false" style="font-size:20px">用户名称</el-link>
+            <el-link :underline="false" style="font-size:20px">{{dynamic.userName}}</el-link>
             <div class="dynamic-meta">
 
             </div>
             <div class="dynamic-content">
-                111
+                {{dynamic.content}}
             </div>
             <div class="dy-picture-container">
-              <img class="dy-picture" v-for="fl in fileList" :key="fl.name" style="width: 100px; height: 100px" :src="fl.url">
+              <img class="dy-picture" v-for="pic in dynamic.pictureList" :key="pic" style="width: 100px; height: 100px" :src="pic">
             </div>
           </div>
           <div class="dynamic-footer">
-            <time class="time">1月13日</time>
-            <el-badge :value="66" :max="99" class="comments-item" type="primary">
+            <time class="time">{{dynamic.createTime}}</time>
+            <el-badge :value="dynamic.replyCount" :max="99" class="comments-item" type="primary">
               <el-button type="text" size="small" @click="showComments">评论</el-button>
             </el-badge>
-            <el-badge :value="200" :max="99" class="thumb-up-item">
+            <el-badge :value="dynamic.likeNum" :max="99" class="thumb-up-item">
               <el-button type="text" size="small">点赞</el-button>
             </el-badge>
           </div>
@@ -132,6 +134,8 @@ export default {
       },
       loading: false,
       count: 0,
+      scrollIndex: 0,
+      scrollDynamics: [],
       commentsShow: false
 
     }
@@ -142,7 +146,7 @@ export default {
 
   computed: {
     noMore () {
-      return this.count >= 20
+      return this.scrollIndex >= this.count
     },
     disabled () {
       return this.loading || this.noMore
@@ -299,22 +303,22 @@ export default {
     load () {
       this.loading = true
       setTimeout(() => {
-        // var _this = this
-        // this.$axios.get('dynamic/list/scorll', {
-        //   userId: this.$store.state.user.userId,
-        //   index: 1
-        // })
-        //   .then(response => {
-        //     console.log(response.data)
-        //     _this.circleInfo = response.data
-        //   })
-        //   .catch(function (error) {
-        //     console.log(error)
-        //   })
+        var _this = this
+        this.$axios.get('dynamic/list/scroll', { params: {
+          userId: this.$store.state.user.userId,
+          index: this.scrollIndex
+        }
 
-        // this.count += 2
-        // this.loading = false
-      }, 2000)
+        })
+          .then(response => {
+            _this.scrollDynamics = this.scrollDynamics.concat(response.data)
+            _this.scrollIndex += 2
+            _this.loading = false
+          })
+          .catch(function (error) {
+            console.log(error)
+          })
+      }, 1000)
     },
 
     showComments () {
@@ -326,6 +330,22 @@ export default {
       this.$axios.get('dynamic/count/' + this.$store.state.user.userId)
         .then(response => {
           _this.count = response.data
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+    },
+
+    test () {
+      // var _this = this
+      this.$axios.get('dynamic/list/scroll', { params: {
+        userId: this.$store.state.user.userId,
+        index: this.scrollIndex
+      }
+
+      })
+        .then(response => {
+          console.log('获取的滚动' + response.data)
         })
         .catch(function (error) {
           console.log(error)
