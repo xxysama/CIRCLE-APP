@@ -37,8 +37,6 @@
       </div>
       <div class="dynamic-bottom">
           <el-button  @click="subimtDynamic">发布</el-button>
-                    <el-button  @click="test">发布1</el-button>
-
       </div>
     </el-card>
 
@@ -72,7 +70,7 @@
               <el-button type="text" size="small" @click="showComments">评论</el-button>
             </el-badge>
             <el-badge :value="dynamic.likeNum" :max="99" class="thumb-up-item">
-              <el-button type="text" size="small">点赞</el-button>
+              <el-button type="text" size="small" @click="likeDynamics(dynamic)">点赞</el-button>
             </el-badge>
           </div>
           <div>
@@ -336,16 +334,19 @@ export default {
         })
     },
 
-    test () {
-      // var _this = this
-      this.$axios.get('dynamic/list/scroll', { params: {
-        userId: this.$store.state.user.userId,
-        index: this.scrollIndex
-      }
-
+    likeDynamics (dynamic) {
+      // 通知后端更改
+      var _this = this
+      this.$axios.put('like/update', {
+        uid: _this.$store.state.user.userId,
+        likeId: dynamic.dynamicId,
+        likeType: 'dynamic'
       })
         .then(response => {
-          console.log('获取的滚动' + response.data)
+          console.log(response.data)
+          // 同步前端点赞数量
+          var flag = response.data.data
+          dynamic.likeNum = flag ? dynamic.likeNum + 1 : dynamic.likeNum - 1
         })
         .catch(function (error) {
           console.log(error)

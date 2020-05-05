@@ -439,9 +439,10 @@ export default {
     likeComments (comment) {
       // 通知后端更改
       var _this = this
-      this.$axios.put('like/bookComment', {
+      this.$axios.put('like/update', {
         uid: _this.$store.state.user.userId,
-        likeId: comment.cid
+        likeId: comment.cid,
+        likeType: 'book'
       })
         .then(response => {
           console.log(response.data)
